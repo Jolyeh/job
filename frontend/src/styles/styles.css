@@ -1,0 +1,362 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   JobRadar — design tokens
+   Tailwind v4 : la configuration se fait en CSS via @theme (pas de
+   tailwind.config.js). Chaque token devient une classe utilitaire.
+   ========================================================================== */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Sora', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* Palette de marque */
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
+  --color-brand-300: #a5b4fc;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #312e81;
+
+  --color-ink-50: #f8fafc;
+  --color-ink-100: #f1f5f9;
+  --color-ink-200: #e2e8f0;
+  --color-ink-300: #cbd5e1;
+  --color-ink-400: #94a3b8;
+  --color-ink-500: #64748b;
+  --color-ink-600: #475569;
+  --color-ink-700: #334155;
+  --color-ink-800: #1e293b;
+  --color-ink-900: #0f172a;
+
+  --color-accent-400: #22d3ee;
+  --color-accent-500: #06b6d4;
+
+  --color-success-50: #ecfdf5;
+  --color-success-500: #10b981;
+  --color-success-700: #047857;
+
+  --color-warn-50: #fffbeb;
+  --color-warn-500: #f59e0b;
+  --color-warn-700: #b45309;
+
+  --color-danger-50: #fef2f2;
+  --color-danger-500: #ef4444;
+  --color-danger-700: #b91c1c;
+
+  --radius-xl2: 1.25rem;
+
+  --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.04), 0 18px 40px -20px rgb(79 70 229 / 0.35);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-ink-50 font-sans text-ink-800 antialiased;
+    background-image:
+      radial-gradient(1200px 600px at 100% -10%, rgb(199 210 254 / 0.45), transparent 60%),
+      radial-gradient(900px 500px at -10% 0%, rgb(165 243 252 / 0.25), transparent 55%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display text-ink-900;
+  }
+
+  ::selection {
+    @apply bg-brand-200 text-brand-900;
+  }
+
+  /* Focus visible cohérent partout (accessibilité clavier) */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-500;
+  }
+
+  /* Scrollbar discrète */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-ink-300) transparent;
+  }
+}
+
+/* ==========================================================================
+   Composants métier réutilisables (couche components de Tailwind v4)
+   ========================================================================== */
+@layer components {
+  /* --- Surfaces ---------------------------------------------------------- */
+  .card {
+    @apply rounded-2xl border border-ink-200/80 bg-white shadow-soft;
+  }
+
+  .card-hover {
+    @apply transition duration-200 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lift;
+  }
+
+  .surface-muted {
+    @apply rounded-2xl border border-ink-200/70 bg-white/70 backdrop-blur;
+  }
+
+  /* --- Boutons (100 % custom, pas de style natif) ------------------------ */
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-xl px-4 py-2.5
+      text-sm font-semibold transition duration-150
+      disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-xl px-4 py-2.5
+      text-sm font-semibold transition duration-150
+      disabled:pointer-events-none disabled:opacity-50
+      bg-brand-600 text-white shadow-sm
+      hover:bg-brand-700 active:bg-brand-800;
+  }
+
+  .btn-secondary {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-xl px-4 py-2.5
+      text-sm font-semibold transition duration-150
+      disabled:pointer-events-none disabled:opacity-50
+      border border-ink-200 bg-white text-ink-700 hover:border-ink-300 hover:bg-ink-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-xl px-4 py-2.5
+      text-sm font-semibold transition duration-150
+      disabled:pointer-events-none disabled:opacity-50
+      text-ink-600 hover:bg-ink-100 hover:text-ink-900;
+  }
+
+  .btn-danger {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-xl px-4 py-2.5
+      text-sm font-semibold transition duration-150
+      disabled:pointer-events-none disabled:opacity-50
+      bg-danger-500/10 text-danger-700 hover:bg-danger-500/20;
+  }
+
+  .btn-icon {
+    @apply inline-flex size-9 items-center justify-center rounded-lg text-ink-500
+      transition hover:bg-ink-100 hover:text-ink-800;
+  }
+
+  /* --- Champs de formulaire : apparence entièrement contrôlée ------------ */
+  .field-label {
+    @apply mb-1.5 block text-sm font-semibold text-ink-800;
+  }
+
+  .field-hint {
+    @apply mt-1.5 text-xs text-ink-500;
+  }
+
+  .field-error {
+    @apply mt-1.5 flex items-center gap-1 text-xs font-medium text-danger-700;
+  }
+
+  .input,
+  .textarea,
+  .select {
+    @apply w-full rounded-xl border border-ink-200 bg-white px-3.5 py-2.5 text-sm text-ink-900
+      placeholder:text-ink-400 shadow-inner shadow-ink-100/40
+      transition duration-150
+      hover:border-ink-300
+      focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/15
+      disabled:cursor-not-allowed disabled:bg-ink-100 disabled:text-ink-400;
+  }
+
+  .input-invalid,
+  .select-invalid {
+    @apply border-danger-500/70 focus:border-danger-500 focus:ring-danger-500/15;
+  }
+
+  /* Select : chevron custom en SVG (background), plus aucune flèche système */
+  .select {
+    @apply cursor-pointer appearance-none bg-no-repeat pr-10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2364748b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 0.65rem center;
+    background-size: 1.15rem;
+  }
+
+  .select option {
+    @apply bg-white text-ink-900;
+    padding: 0.5rem;
+  }
+
+  /* --- Case à cocher custom --------------------------------------------- */
+  .checkbox {
+    @apply relative flex cursor-pointer select-none items-start gap-2.5;
+  }
+
+  .checkbox input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .checkbox-box {
+    @apply mt-0.5 grid size-5 shrink-0 place-items-center rounded-md border-2 border-ink-300
+      bg-white transition duration-150;
+  }
+
+  .checkbox input:checked + .checkbox-box {
+    @apply border-brand-600 bg-brand-600;
+  }
+
+  .checkbox input:checked + .checkbox-box svg {
+    @apply scale-100 opacity-100;
+  }
+
+  .checkbox-box svg {
+    @apply size-3.5 scale-50 text-white opacity-0 transition duration-150;
+  }
+
+  .checkbox input:focus-visible + .checkbox-box {
+    @apply ring-4 ring-brand-500/25;
+  }
+
+  .checkbox input:disabled + .checkbox-box {
+    @apply border-ink-200 bg-ink-100;
+  }
+
+  /* --- Interrupteur (toggle) custom -------------------------------------- */
+  .toggle {
+    @apply inline-flex cursor-pointer items-center gap-3 select-none;
+  }
+
+  .toggle input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .toggle-track {
+    @apply relative h-6 w-11 shrink-0 rounded-full bg-ink-300 transition duration-200;
+  }
+
+  .toggle-track::after {
+    content: '';
+    @apply absolute left-0.5 top-0.5 size-5 rounded-full bg-white shadow-sm transition duration-200;
+  }
+
+  .toggle input:checked + .toggle-track {
+    @apply bg-brand-600;
+  }
+
+  .toggle input:checked + .toggle-track::after {
+    @apply translate-x-5;
+  }
+
+  .toggle input:focus-visible + .toggle-track {
+    @apply ring-4 ring-brand-500/25;
+  }
+
+  /* --- Puce de sélection (contrat, télétravail, compétences) ------------- */
+  .chip {
+    @apply inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-ink-200
+      bg-white px-3.5 py-1.5 text-sm font-medium text-ink-600
+      transition duration-150 hover:border-brand-300 hover:text-brand-700;
+  }
+
+  .chip input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .chip:has(input:checked) {
+    @apply border-brand-500 bg-brand-50 text-brand-700 ring-1 ring-brand-500/20;
+  }
+
+  .chip:has(input:focus-visible) {
+    @apply outline-2 outline-offset-2 outline-brand-500;
+  }
+
+  /* --- Badge / tag ------------------------------------------------------- */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+
+  .badge-brand {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold bg-brand-50 text-brand-700;
+  }
+  .badge-success {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold bg-success-50 text-success-700;
+  }
+  .badge-warn {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold bg-warn-50 text-warn-700;
+  }
+  .badge-danger {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold bg-danger-50 text-danger-700;
+  }
+  .badge-neutral {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold bg-ink-100 text-ink-600;
+  }
+
+  /* --- Divers ------------------------------------------------------------ */
+  .link {
+    @apply font-medium text-brand-600 underline-offset-4 transition hover:text-brand-700 hover:underline;
+  }
+
+  .divider {
+    @apply h-px w-full bg-ink-200;
+  }
+
+  .skeleton {
+    @apply animate-pulse rounded-lg bg-ink-200/70;
+  }
+
+  .scroll-thin {
+    @apply overflow-y-auto;
+  }
+}
+
+/* Barre de score : dégradé piloté par le score (0-100) */
+.score-ring {
+  --score: 0;
+  background: conic-gradient(
+    from 0deg,
+    var(--color-brand-600) calc(var(--score) * 3.6deg),
+    var(--color-ink-200) 0deg
+  );
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.animate-fade-up {
+  animation: fade-up 260ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

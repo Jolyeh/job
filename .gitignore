@@ -1,0 +1,42 @@
+# Dépendances
+node_modules/
+.pnp
+.pnp.js
+
+# Builds
+dist/
+build/
+out-tsc/
+.angular/
+*.tsbuildinfo
+
+# Base de données locale (script `npm run db:start`)
+.pgdata/
+*.pid
+
+# Configuration locale : ne jamais committer de secret
+.env
+.env.local
+.env.*.local
+
+# Tests & couverture
+coverage/
+.nyc_output/
+test-results/
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Éditeurs / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Divers
+.cache/
+tmp/
+.eslintcache

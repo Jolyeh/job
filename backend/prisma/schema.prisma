@@ -1,0 +1,279 @@
+// =============================================================================
+//  JobRadar — Schéma Prisma 7 (PostgreSQL, moteur "queryCompiler" sans Rust)
+// -----------------------------------------------------------------------------
+//  Modèles demandés : User, Profile, Skill, JobOffer, Bookmark
+//  Modèles additionnels nécessaires au produit :
+//    - ProfileSkill / JobOfferSkill : tables de jointure typées (poids, obligatoire)
+//    - ApplicationEvent             : journal du suivi de candidature
+//    - SearchRun                    : traçabilité des recherches agrégées
+// =============================================================================
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// -----------------------------------------------------------------------------
+//  Énumérations
+// -----------------------------------------------------------------------------
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum ContractType {
+  CDI
+  CDD
+  STAGE
+  ALTERNANCE
+  FREELANCE
+  INTERIM
+}
+
+enum WorkMode {
+  ONSITE
+  HYBRID
+  REMOTE
+}
+
+enum ExperienceLevel {
+  JUNIOR
+  INTERMEDIATE
+  SENIOR
+  LEAD
+}
+
+/// Cycle de vie d'une offre mise de côté : le favori devient un suivi de candidature.
+enum ApplicationStatus {
+  SAVED
+  APPLIED
+  INTERVIEW
+  OFFER
+  REJECTED
+  WITHDRAWN
+}
+
+// -----------------------------------------------------------------------------
+//  Comptes & profil
+// -----------------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique
+  passwordHash String
+  fullName     String
+  role         UserRole @default(USER)
+  /// Incrémenté à chaque déconnexion globale pour révoquer les JWT émis.
+  tokenVersion Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile   Profile?
+  bookmarks Bookmark[]
+  searchRuns SearchRun[]
+
+  @@map("users")
+}
+
+/// Un seul profil de recherche par utilisateur : c'est lui qui pilote le matching.
+model Profile {
+  id          String  @id @default(uuid()) @db.Uuid
+  userId      String  @unique @db.Uuid
+  /// Intitulé de poste recherché, ex. "Développeur Full-Stack Angular".
+  headline    String
+  experienceLevel ExperienceLevel @default(INTERMEDIATE)
+  yearsExperience Int @default(0)
+
+  locationCity    String
+  locationCountry String  @default("FR")
+  /// Rayon de recherche en kilomètres (0 = pas de contrainte de distance).
+  radiusKm        Int     @default(30)
+
+  contractTypes ContractType[] @default([CDI])
+  workModes     WorkMode[]     @default([HYBRID, ONSITE])
+
+  salaryMin      Int?    @default(0)
+  salaryCurrency String  @default("EUR")
+  salaryPeriod   String  @default("YEAR") // YEAR | MONTH | DAY
+
+  bio         String?  @db.Text
+  isPublished Boolean  @default(true)
+  lastSearchAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills ProfileSkill[]
+
+  @@index([locationCity])
+  @@map("profiles")
+}
+
+/// Référentiel de compétences partagé entre profils et offres (normalisé).
+model Skill {
+  id       String  @id @default(uuid()) @db.Uuid
+  /// Clé canonique bas de casse pour dédupliquer ("nestjs", "react").
+  slug     String  @unique
+  label    String
+  category String  @default("general")
+  createdAt DateTime @default(now())
+
+  profiles ProfileSkill[]
+  offers   JobOfferSkill[]
+
+  @@index([category])
+  @@map("skills")
+}
+
+/// Compétence d'un profil + son poids (auto-évaluation 1..5).
+model ProfileSkill {
+  profileId String @db.Uuid
+  skillId   String @db.Uuid
+  weight    Int    @default(3) @db.SmallInt
+  years     Int    @default(0) @db.SmallInt
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  skill   Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([profileId, skillId])
+  @@index([skillId])
+  @@map("profile_skills")
+}
+
+// -----------------------------------------------------------------------------
+//  Offres d'emploi agrégées
+// -----------------------------------------------------------------------------
+
+model JobOffer {
+  id         String @id @default(uuid()) @db.Uuid
+  /// Identifiant côté fournisseur : garantit l'idempotence de l'agrégation.
+  externalId String
+  source     String // "france-travail" | "remotive" | "seed" ...
+
+  title       String
+  company     String
+  description String  @db.Text
+  city        String
+  country     String  @default("FR")
+  contractType   ContractType
+  workMode       WorkMode   @default(ONSITE)
+  experienceLevel ExperienceLevel @default(INTERMEDIATE)
+
+  salaryMin Int?
+  salaryMax Int?
+  salaryCurrency String @default("EUR")
+
+  url       String
+  applyUrl  String?
+  logoUrl   String?
+  tags      String[] @default([])
+
+  publishedAt DateTime
+  /// Payload brut du fournisseur, conservé pour audit / re-normalisation.
+  rawPayload  Json?
+  /// Dernière synchronisation depuis la source (fraîcheur de l'agrégation).
+  syncedAt    DateTime @default(now())
+  isActive    Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  skills    JobOfferSkill[]
+  bookmarks Bookmark[]
+
+  /// Un même poste ne peut exister qu'une fois par source.
+  @@unique([source, externalId])
+  @@index([publishedAt(sort: Desc)])
+  @@index([city])
+  @@index([contractType, workMode])
+  @@index([title])
+  @@index([company])
+  @@map("job_offers")
+}
+
+/// Compétence exigée/souhaitée par une offre.
+model JobOfferSkill {
+  jobOfferId String @db.Uuid
+  skillId    String @db.Uuid
+  required   Boolean @default(true)
+  weight     Int     @default(3) @db.SmallInt
+
+  jobOffer JobOffer @relation(fields: [jobOfferId], references: [id], onDelete: Cascade)
+  skill    Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([jobOfferId, skillId])
+  @@index([skillId])
+  @@map("job_offer_skills")
+}
+
+// -----------------------------------------------------------------------------
+//  Favoris & suivi de candidature
+// -----------------------------------------------------------------------------
+
+model Bookmark {
+  id         String @id @default(uuid()) @db.Uuid
+  userId     String @db.Uuid
+  jobOfferId String @db.Uuid
+
+  status ApplicationStatus @default(SAVED)
+  /// Score de matching au moment de la sauvegarde (historisation).
+  matchScore Int     @default(0) @db.SmallInt
+  notes       String? @db.Text
+
+  appliedAt    DateTime?
+  interviewAt  DateTime?
+  nextActionAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobOffer JobOffer @relation(fields: [jobOfferId], references: [id], onDelete: Cascade)
+  events   ApplicationEvent[]
+
+  @@unique([userId, jobOfferId])
+  @@index([userId, status])
+  @@map("bookmarks")
+}
+
+/// Historique des changements de statut d'une candidature.
+model ApplicationEvent {
+  id         String @id @default(uuid()) @db.Uuid
+  bookmarkId String @db.Uuid
+  status     ApplicationStatus
+  comment    String?  @db.Text
+  createdAt  DateTime @default(now())
+
+  bookmark Bookmark @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
+
+  @@index([bookmarkId, createdAt])
+  @@map("application_events")
+}
+
+// -----------------------------------------------------------------------------
+//  Observabilité de l'agrégation
+// -----------------------------------------------------------------------------
+
+model SearchRun {
+  id            String  @id @default(uuid()) @db.Uuid
+  userId        String? @db.Uuid
+  /// Profil figé utilisé pour la recherche (reproductibilité du scoring).
+  profileSnapshot Json
+  sources        String[] @default([])
+  offersFetched  Int      @default(0)
+  offersPersisted Int     @default(0)
+  durationMs     Int      @default(0)
+  errors         Json?
+  createdAt      DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("search_runs")
+}
