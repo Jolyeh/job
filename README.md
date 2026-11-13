@@ -11,6 +11,9 @@ présente un catalogue filtrable avec favoris et suivi de candidatures.
 | **Base** | PostgreSQL 18 + Prisma 7 (driver adapter `pg`, moteur sans Rust) |
 | **Tests** | Jest (30 tests unitaires) · Vitest + jsdom (8 tests de composants) |
 
+📄 Décisions d'architecture, arbitrages et dette assumée :
+**[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**
+
 ---
 
 ## 1. Démarrage rapide
