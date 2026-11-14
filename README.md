@@ -24,12 +24,10 @@ cd backend
 npm install
 cp .env.example .env            # renseignez JWT_SECRET au minimum
 
-npm run db:start                # PostgreSQL local « zéro installation » (terminal 1)
-npm run prisma:generate         # client Prisma typé
-npm run db:migrate:sql          # applique prisma/migrations
-npm run db:seed                 # 28 offres + compte de démo
+npm run db:start                # démarre PostgreSQL en arrière-plan (rend la main)
+npm run db:setup                # crée les tables + 56 compétences + 28 offres
 
-npm run start:dev               # http://localhost:3000/api (terminal 2)
+npm run start:dev               # http://localhost:3000/api
 
 # --- Frontend --------------------------------------------------------------
 cd ../frontend
@@ -39,19 +37,33 @@ npm start                       # http://localhost:4200 (proxy /api → :3000)
 
 Compte de démonstration : **demo@jobradar.dev / Demo1234**
 
-> **PostgreSQL existant ?** Pointez simplement `DATABASE_URL` vers votre
-> instance et utilisez `npx prisma migrate deploy` (commande de référence).
-> Le script `db:migrate:sql` est un fallback équivalent, utile quand le binaire
+`npm run db:start` est **idempotent** et **ne bloque pas le terminal** : le
+serveur est détaché, vous pouvez enchaîner les commandes dans la même fenêtre.
+`npm run db:stop` l'arrête, `npm run db:status` affiche son état et
+`npm run db:reset` repart de zéro.
+
+> **PostgreSQL existant ?** Pointez `DATABASE_URL` vers votre instance et
+> utilisez `npx prisma migrate deploy` (commande de référence). Le script
+> `db:migrate:sql` est un fallback équivalent, utile quand le binaire
 > `schema-engine` ne peut pas être téléchargé (CI hors-ligne, sandbox durcie) :
 > il applique les mêmes fichiers SQL et tient le même registre
-> `_prisma_migrations`, donc les deux méthodes sont interchangeables.
+> `_prisma_migrations`. `db:setup` l'utilise **par défaut** pour rester
+> utilisable hors-ligne ; `db:setup:full` ajoute `prisma generate` (qui, lui,
+> nécessite un accès réseau).
+
+> **`PORT` par variable d'environnement** — `PORT=8080 npm run start:prod`
+> fonctionne : les variables d'environnement sont converties et validées au
+> démarrage (`src/config/env.validation.ts`).
 
 ### Scripts utiles
 
 | Commande (backend) | Rôle |
 |---|---|
 | `npm run start:dev` | API en watch mode |
-| `npm run db:start` / `db:stop` | Cluster PostgreSQL local (embedded-postgres) |
+| `npm run db:start` / `db:stop` / `db:status` | Cluster PostgreSQL local, en arrière-plan |
+| `npm run db:setup` | Migrations + seed (sans réseau) |
+| `npm run db:setup:full` | `prisma generate` + migrations + seed |
+| `npm run db:reset` | Supprime les données et réinitialise le cluster |
 | `npm run prisma:generate` | Régénère le client après modification du schéma |
 | `npm run db:migrate` | `prisma migrate deploy` (prod / CI) |
 | `npm run db:migrate:sql` | Fallback sans binaire schema-engine |

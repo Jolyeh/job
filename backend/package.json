@@ -13,10 +13,13 @@
     "db:stop": "node scripts/postgres.mjs stop",
     "db:migrate": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
-    "db:setup": "npm run prisma:generate && npm run db:migrate:sql && npm run db:seed",
+    "db:setup": "npm run db:migrate:sql && npm run db:seed",
     "typecheck": "tsc --noEmit -p tsconfig.build.json",
     "test": "jest",
-    "db:migrate:sql": "node prisma/apply-sql-migrations.mjs"
+    "db:migrate:sql": "node prisma/apply-sql-migrations.mjs",
+    "db:status": "node scripts/postgres.mjs status",
+    "db:reset": "node scripts/postgres.mjs reset",
+    "db:setup:full": "npm run prisma:generate && npm run db:migrate:sql && npm run db:seed"
   },
   "dependencies": {
     "@nestjs/common": "^12.4.2",

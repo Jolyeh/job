@@ -50,6 +50,16 @@ mêmes fichiers SQL en tenant le registre `_prisma_migrations`. Les deux chemins
 sont interchangeables — utile en CI restreinte où `binaries.prisma.sh` est
 bloqué.
 
+Deux pièges corrigés dans ce fallback, tous deux silencieux :
+
+1. **Il charge `.env`** (`import 'dotenv/config'`). Exécuté par `node` et non par
+   `tsx`, il retombait sinon sur l'URL par défaut et migrait une *autre* base
+   que celle de l'API — les tables semblaient absentes au seed.
+2. **Il vérifie les tables, pas seulement le registre.** Une entrée
+   `_prisma_migrations` ne prouve rien après une restauration ou une migration
+   interrompue : si aucune table applicative n'existe, le registre est purgé et
+   la migration rejouée.
+
 ---
 
 ## 3. Le scoring comme fonction pure

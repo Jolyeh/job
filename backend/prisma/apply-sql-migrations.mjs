@@ -10,20 +10,42 @@
  *
  * Il tient le même registre `_prisma_migrations` : une base migrée par ce
  * script reste compatible avec `prisma migrate status|deploy`.
+ *
+ * ATTENTION : ce fichier est exécuté par `node` (pas par `tsx`), il doit donc
+ * charger explicitement `.env` — sans quoi il retomberait sur l'URL par défaut
+ * et migrerait une *autre* base que celle utilisée par l'API et le seed.
  */
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import 'dotenv/config';
 import { Client } from 'pg';
 
-const connectionString =
-  process.env.DATABASE_URL ??
-  'postgresql://jobradar:jobradar@localhost:55432/jobradar';
+const DEFAULT_URL = 'postgresql://jobradar:jobradar@localhost:55432/jobradar';
+const connectionString = process.env.DATABASE_URL ?? DEFAULT_URL;
+
+/** Masque le mot de passe avant affichage dans les journaux. */
+const safeUrl = connectionString.replace(/:\/\/[^@]*@/, '://***@');
+
+/**
+ * Garde-fou : une entrée `_prisma_migrations` ne suffit pas à prouver que la
+ * migration est réellement appliquée (base restaurée, registre importé à la
+ * main, migration interrompue). On vérifie donc aussi qu'il existe au moins
+ * une table applicative.
+ */
+async function hasApplicationTables(client) {
+  const { rows } = await client.query(
+    `SELECT count(*)::int AS total FROM pg_tables
+      WHERE schemaname = 'public' AND tablename <> '_prisma_migrations'`,
+  );
+  return rows[0].total > 0;
+}
 
 const migrationsDir = path.join(process.cwd(), 'prisma', 'migrations');
 const client = new Client({ connectionString });
 
 await client.connect();
+console.log(`[migrate] cible : ${safeUrl}`);
 
 await client.query(`
   CREATE TABLE IF NOT EXISTS "_prisma_migrations" (
@@ -38,13 +60,26 @@ await client.query(`
   );
 `);
 
+const tablesPresent = await hasApplicationTables(client);
 const applied = new Set(
-  (
-    await client.query(
-      `SELECT migration_name FROM "_prisma_migrations" WHERE finished_at IS NOT NULL`,
-    )
-  ).rows.map((row) => row.migration_name),
+  tablesPresent
+    ? (
+        await client.query(
+          `SELECT migration_name FROM "_prisma_migrations" WHERE finished_at IS NOT NULL`,
+        )
+      ).rows.map((row) => row.migration_name)
+    : [],
 );
+
+if (!tablesPresent) {
+  const { rows } = await client.query('SELECT count(*)::int AS total FROM "_prisma_migrations"');
+  if (rows[0].total > 0) {
+    console.log(
+      '[migrate] registre présent mais aucune table applicative : réapplication complète',
+    );
+    await client.query('TRUNCATE "_prisma_migrations"');
+  }
+}
 
 const migrations = fs
   .readdirSync(migrationsDir, { withFileTypes: true })

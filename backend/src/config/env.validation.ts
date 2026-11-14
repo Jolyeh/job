@@ -1,4 +1,4 @@
-import { plainToInstance } from 'class-transformer';
+import { Transform, plainToInstance } from 'class-transformer';
 import {
   IsEnum,
   IsInt,
@@ -21,11 +21,22 @@ export enum NodeEnv {
  * L'application refuse de booter si la configuration est incomplète :
  * on évite ainsi les erreurs découvertes en production.
  */
+/** Convertit une variable d'environnement (toujours une chaîne) en entier. */
+const toInt = ({ value }: { value: unknown }) => {
+  if (value === undefined || value === null || value === '') return undefined;
+  const parsed = Number(value);
+  return Number.isInteger(parsed) ? parsed : value; // laisse @IsInt produire l'erreur
+};
+
 export class EnvironmentVariables {
   @IsEnum(NodeEnv)
   @IsOptional()
   NODE_ENV: NodeEnv = NodeEnv.Development;
 
+  // `enableImplicitConversion` ne suffit pas : process.env.PORT arrive en
+  // chaîne ("3100") et @IsInt la rejette. On convertit explicitement, ce qui
+  // couvre les déploiements Docker/CI qui passent la config par l'environnement.
+  @Transform(toInt)
   @IsInt()
   @Min(1)
   @IsOptional()
