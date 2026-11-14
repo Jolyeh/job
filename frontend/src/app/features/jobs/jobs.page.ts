@@ -24,6 +24,7 @@ import { JobsStore } from '../../core/services/jobs.store';
 import { ProfileStore } from '../../core/services/profile.store';
 import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
 import { JobCardComponent } from './job-card.component';
+import { I18nService } from '../../core/i18n/i18n.service';
 import { JobFiltersComponent } from './job-filters.component';
 
 /**
@@ -47,24 +48,20 @@ import { JobFiltersComponent } from './job-filters.component';
         <div>
           <p class="badge-brand">
             <lucide-angular [img]="SparklesIcon" class="size-3.5" />
-            @if (jobsStore.meta()?.personalized) {
-              Recommandations personnalisées
-            } @else {
-              Catalogue complet
-            }
+            {{ i18n.t(jobsStore.meta()?.personalized ? 'jobs.personalized' : 'jobs.catalog') }}
           </p>
           <h1 class="mt-3 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-            {{ jobsStore.total() }} offre{{ jobsStore.total() > 1 ? 's' : '' }}
-            <span class="text-ink-400">pour vous</span>
+            {{ i18n.t('jobs.count', { count: jobsStore.total() }) }}
+            <span class="text-ink-400">{{ i18n.t('jobs.forYou') }}</span>
           </h1>
           <p class="mt-1.5 text-sm text-ink-500">
             @if (jobsStore.meta()?.profileHeadline; as headline) {
-              Classées selon votre profil « {{ headline }} »
+              {{ i18n.t('jobs.rankedFor', { headline }) }}
             } @else {
-              <a routerLink="/app/profile" class="link">Complétez votre profil</a>
-              pour obtenir un score de correspondance personnalisé.
+              <a routerLink="/app/profile" class="link">{{ i18n.t('dashboard.onboarding.cta') }}</a>
+              {{ i18n.t('jobs.rankedHint') }}
             }
-            · Score moyen {{ jobsStore.facets()?.averageScore ?? 0 }}/100
+            · {{ i18n.t('jobs.averageScore', { score: jobsStore.facets()?.averageScore ?? 0 }) }}
           </p>
         </div>
 
@@ -75,7 +72,7 @@ import { JobFiltersComponent } from './job-filters.component';
             (click)="filtersOpen.set(true)"
           >
             <lucide-angular [img]="FiltersIcon" class="size-4" />
-            Filtres
+            {{ i18n.t('filters.title') }}
             @if (jobsStore.activeFilterCount() > 0) {
               <span class="badge-brand">{{ jobsStore.activeFilterCount() }}</span>
             }
@@ -91,7 +88,7 @@ import { JobFiltersComponent } from './job-filters.component';
               class="size-4"
               [class.animate-spin]="jobsStore.isRefreshing()"
             />
-            Actualiser
+            {{ i18n.t('jobs.refresh') }}
           </button>
         </div>
       </header>
@@ -116,14 +113,14 @@ import { JobFiltersComponent } from './job-filters.component';
               class="absolute inset-y-0 right-0 w-[min(22rem,88vw)] overflow-y-auto bg-ink-50 p-4 shadow-2xl"
               role="dialog"
               aria-modal="true"
-              aria-label="Filtres de recherche"
+              [attr.aria-label]="i18n.t('filters.title')"
             >
               <div class="mb-3 flex items-center justify-between">
-                <p class="font-display text-lg font-bold">Filtres</p>
+                <p class="font-display text-lg font-bold">{{ i18n.t('filters.title') }}</p>
                 <button
                   type="button"
                   class="btn-icon"
-                  aria-label="Fermer les filtres"
+                  [attr.aria-label]="i18n.t('filters.close')"
                   (click)="filtersOpen.set(false)"
                 >
                   <lucide-angular [img]="CloseIcon" class="size-5" />
@@ -135,7 +132,7 @@ import { JobFiltersComponent } from './job-filters.component';
                 class="btn-primary mt-4 w-full"
                 (click)="filtersOpen.set(false)"
               >
-                Voir {{ jobsStore.total() }} offre{{ jobsStore.total() > 1 ? 's' : '' }}
+                {{ i18n.t('jobs.showResults', { count: jobsStore.total() }) }}
               </button>
             </div>
           </div>
@@ -147,9 +144,9 @@ import { JobFiltersComponent } from './job-filters.component';
           <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
             <p class="text-sm text-ink-500">
               @if (jobsStore.isLoading()) {
-                Chargement des offres…
+                {{ i18n.t('jobs.loading') }}
               } @else {
-                Affichage {{ rangeStart() }}–{{ rangeEnd() }} sur {{ jobsStore.total() }}
+                {{ i18n.t('jobs.showing', { start: rangeStart(), end: rangeEnd(), total: jobsStore.total() }) }}
               }
             </p>
             @if (jobsStore.activeFilterCount() > 0) {
@@ -158,7 +155,7 @@ import { JobFiltersComponent } from './job-filters.component';
                 class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-500 transition hover:text-brand-700"
                 (click)="jobsStore.resetFilters()"
               >
-                Effacer les {{ jobsStore.activeFilterCount() }} filtre(s)
+                {{ i18n.t('jobs.clearFilters', { count: jobsStore.activeFilterCount() }) }}
                 <lucide-angular [img]="CloseIcon" class="size-3.5" />
               </button>
             }
@@ -171,7 +168,7 @@ import { JobFiltersComponent } from './job-filters.component';
             >
               <lucide-angular [img]="AlertIcon" class="mt-0.5 size-4 shrink-0" />
               <div>
-                <p class="font-semibold">Impossible de charger les offres</p>
+                <p class="font-semibold">{{ i18n.t('jobs.errorTitle') }}</p>
                 <p>{{ error }}</p>
               </div>
             </div>
@@ -202,9 +199,9 @@ import { JobFiltersComponent } from './job-filters.component';
           } @else if (jobsStore.isEmpty()) {
             <div class="card">
               <app-empty-state
-                title="Aucune offre ne correspond"
-                description="Élargissez vos critères : retirez le score minimum, augmentez la période ou changez la ville."
-                actionLabel="Réinitialiser les filtres"
+                [title]="i18n.t('jobs.emptyTitle')"
+                [description]="i18n.t('jobs.emptyText')"
+                [actionLabel]="i18n.t('jobs.emptyAction')"
                 (action)="jobsStore.resetFilters()"
               />
             </div>
@@ -219,13 +216,13 @@ import { JobFiltersComponent } from './job-filters.component';
             @if (jobsStore.totalPages() > 1) {
               <nav
                 class="mt-8 flex items-center justify-center gap-1.5"
-                aria-label="Pagination des offres"
+                [attr.aria-label]="i18n.t('jobs.pagination')"
               >
                 <button
                   type="button"
                   class="btn-secondary px-3 py-2"
                   [disabled]="jobsStore.page() === 1"
-                  aria-label="Page précédente"
+                  [attr.aria-label]="i18n.t('common.previous')"
                   (click)="jobsStore.goToPage(jobsStore.page() - 1)"
                 >
                   <lucide-angular [img]="PrevIcon" class="size-4" />
@@ -255,7 +252,7 @@ import { JobFiltersComponent } from './job-filters.component';
                   type="button"
                   class="btn-secondary px-3 py-2"
                   [disabled]="jobsStore.page() === jobsStore.totalPages()"
-                  aria-label="Page suivante"
+                  [attr.aria-label]="i18n.t('common.next')"
                   (click)="jobsStore.goToPage(jobsStore.page() + 1)"
                 >
                   <lucide-angular [img]="NextIcon" class="size-4" />
@@ -269,7 +266,7 @@ import { JobFiltersComponent } from './job-filters.component';
             <footer class="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-ink-400">
               <span class="inline-flex items-center gap-1 font-semibold text-ink-500">
                 <lucide-angular [img]="TrendingIcon" class="size-3.5" />
-                Sources
+                {{ i18n.t('jobs.sources') }}
               </span>
               @for (source of jobsStore.meta()!.sources; track source.source) {
                 <span class="inline-flex items-center gap-1">
@@ -289,6 +286,7 @@ import { JobFiltersComponent } from './job-filters.component';
 })
 export class JobsPageComponent implements OnInit {
   readonly jobsStore = inject(JobsStore);
+  readonly i18n = inject(I18nService);
   private readonly profileStore = inject(ProfileStore);
   private readonly bookmarksStore = inject(BookmarksStore);
 
@@ -337,8 +335,7 @@ export class JobsPageComponent implements OnInit {
     // Chargement initial : profil (pour le scoring) et favoris (pour l'état des
     // cartes) en parallèle, puis catalogue. Un seul appel par store et par
     // session : revenir sur la page ne relance pas les requêtes.
-    this.profileStore.load();
+    this.profileStore.load().subscribe(() => this.jobsStore.load());
     this.bookmarksStore.load();
-    this.jobsStore.load();
   }
 }

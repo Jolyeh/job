@@ -7,7 +7,6 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import {
   LucideAngularModule,
@@ -28,14 +27,15 @@ import {
 } from 'lucide-angular';
 import { JobOffer } from '../../core/models/api.models';
 import { BookmarksStore } from '../../core/services/bookmarks.store';
-import { JobsStore, CONTRACT_LABELS, EXPERIENCE_LABELS, WORK_MODE_LABELS } from '../../core/services/jobs.store';
+import { I18nService } from '../../core/i18n/i18n.service';
+import { JobsStore } from '../../core/services/jobs.store';
 import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
 
 /** Fiche détaillée d'une offre, avec le détail du score critère par critère. */
 @Component({
   selector: 'app-job-detail-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, ScoreRingComponent, LucideAngularModule, DatePipe],
+  imports: [RouterLink, ScoreRingComponent, LucideAngularModule],
   template: `
     <div class="mx-auto max-w-5xl">
       <a
@@ -43,7 +43,7 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
         class="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-500 transition hover:text-brand-700"
       >
         <lucide-angular [img]="BackIcon" class="size-4" />
-        Retour aux offres
+        {{ i18n.t('jobs.detail.back') }}
       </a>
 
       @if (loading()) {
@@ -87,7 +87,7 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
                   </span>
                   <span class="inline-flex items-center gap-1.5">
                     <lucide-angular [img]="CalendarIcon" class="size-4 text-ink-400" />
-                    Publiée le {{ job.publishedAt | date: 'd MMMM y' }}
+                    {{ i18n.t('jobs.detail.published', { date: i18n.formatDate(job.publishedAt, { day: 'numeric', month: 'long', year: 'numeric' }) }) }}
                   </span>
                 </p>
 
@@ -107,7 +107,7 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
               <div class="flex flex-col items-center gap-3">
                 <app-score-ring [score]="job.match.score" [size]="76" />
                 <p class="text-center text-xs font-semibold text-ink-500">
-                  correspondance
+                  {{ i18n.t('jobs.detail.match') }}
                 </p>
               </div>
             </div>
@@ -119,7 +119,7 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
                 rel="noopener noreferrer"
                 class="btn-primary"
               >
-                Postuler sur le site source
+                {{ i18n.t('jobs.detail.applyOnSite') }}
                 <lucide-angular [img]="ExternalIcon" class="size-4" />
               </a>
               <button
@@ -141,7 +141,7 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
           <div class="grid gap-6 lg:grid-cols-[1.7fr_1fr]">
             <!-- Description -->
             <section class="card p-6">
-              <h2 class="mb-4 text-base font-bold">Description du poste</h2>
+              <h2 class="mb-4 text-base font-bold">{{ i18n.t('jobs.detail.description') }}</h2>
               <div class="space-y-3 text-sm leading-relaxed text-ink-700">
                 @for (paragraph of description(); track $index) {
                   <p class="whitespace-pre-line">{{ paragraph }}</p>
@@ -162,10 +162,10 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
               <section class="card p-5">
                 <h2 class="mb-1 flex items-center gap-2 text-sm font-bold">
                   <lucide-angular [img]="TargetIcon" class="size-4 text-brand-600" />
-                  Pourquoi ce score ?
+                  {{ i18n.t('jobs.detail.whyScore') }}
                 </h2>
                 <p class="mb-4 text-xs text-ink-500">
-                  Détail des six critères pondérés du moteur de matching.
+                  {{ i18n.t('jobs.detail.whyScoreHint') }}
                 </p>
 
                 <ul class="space-y-3">
@@ -191,7 +191,7 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
                 <section class="rounded-2xl border border-success-500/25 bg-success-50/60 p-4">
                   <h3 class="mb-2 flex items-center gap-1.5 text-sm font-bold text-success-700">
                     <lucide-angular [img]="CheckIcon" class="size-4" />
-                    Points forts
+                    {{ i18n.t('jobs.detail.strengths') }}
                   </h3>
                   <ul class="space-y-1.5 text-xs text-success-700">
                     @for (reason of job.match.reasons; track reason) {
@@ -208,7 +208,7 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
                 <section class="rounded-2xl border border-warn-500/25 bg-warn-50/70 p-4">
                   <h3 class="mb-2 flex items-center gap-1.5 text-sm font-bold text-warn-700">
                     <lucide-angular [img]="WarnIcon" class="size-4" />
-                    Points de vigilance
+                    {{ i18n.t('jobs.detail.warnings') }}
                   </h3>
                   <ul class="space-y-1.5 text-xs text-warn-700">
                     @for (warning of job.match.warnings; track warning) {
@@ -225,7 +225,7 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
               <section class="card p-5">
                 <h2 class="mb-3 flex items-center gap-2 text-sm font-bold">
                   <lucide-angular [img]="SparklesIcon" class="size-4 text-brand-600" />
-                  Compétences demandées
+                  {{ i18n.t('jobs.detail.skills') }}
                 </h2>
                 <div class="flex flex-wrap gap-1.5">
                   @for (skill of job.skills; track skill.slug) {
@@ -247,15 +247,15 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
                     </span>
                   }
                 </div>
-                <p class="mt-2 text-[11px] text-ink-400">* compétence explicitement requise</p>
+                <p class="mt-2 text-[11px] text-ink-400">{{ i18n.t('jobs.detail.skillsHint') }}</p>
               </section>
             </aside>
           </div>
         </article>
       } @else {
         <div class="card mt-5 p-10 text-center">
-          <p class="font-semibold text-ink-900">Cette offre n'existe plus.</p>
-          <a routerLink="/app/jobs" class="btn-primary mt-4">Voir les autres offres</a>
+          <p class="font-semibold text-ink-900">{{ i18n.t('jobs.detail.gone') }}</p>
+          <a routerLink="/app/jobs" class="btn-primary mt-4">{{ i18n.t('jobs.detail.seeOthers') }}</a>
         </div>
       }
     </div>
@@ -267,6 +267,7 @@ export class JobDetailPageComponent implements OnInit {
 
   private readonly jobsStore = inject(JobsStore);
   readonly bookmarks = inject(BookmarksStore);
+  readonly i18n = inject(I18nService);
 
   readonly offer = signal<JobOffer | null>(null);
   readonly loading = signal(true);
@@ -302,24 +303,24 @@ export class JobDetailPageComponent implements OnInit {
 
   readonly contractLabel = computed(() => {
     const job = this.offer();
-    return job ? CONTRACT_LABELS[job.contractType] : '';
+    return job ? this.i18n.t(`contract.${job.contractType}`) : '';
   });
 
   readonly workModeLabel = computed(() => {
     const job = this.offer();
-    return job ? WORK_MODE_LABELS[job.workMode] : '';
+    return job ? this.i18n.t(`workMode.${job.workMode}`) : '';
   });
 
   readonly experienceLabel = computed(() => {
     const job = this.offer();
-    return job ? EXPERIENCE_LABELS[job.experienceLevel] ?? job.experienceLevel : '';
+    return job ? this.i18n.t(`experience.${job.experienceLevel}`) : '';
   });
 
   readonly salaryLabel = computed(() => {
     const job = this.offer();
     if (!job || (!job.salaryMin && !job.salaryMax)) return null;
     const format = (value: number) =>
-      new Intl.NumberFormat('fr-FR', {
+      new Intl.NumberFormat(this.i18n.locale(), {
         style: 'currency',
         currency: job.salaryCurrency,
         maximumFractionDigits: 0,

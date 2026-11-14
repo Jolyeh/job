@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import {
   LucideAngularModule,
@@ -10,6 +9,7 @@ import {
   CalendarClock,
   ChartNoAxesColumn,
   CircleCheck,
+  Globe,
   MapPin,
   Send,
   Sparkles,
@@ -19,22 +19,19 @@ import {
   WandSparkles,
 } from 'lucide-angular';
 import { AuthService } from '../../core/services/auth.service';
-import { BookmarksStore, STATUS_LABELS } from '../../core/services/bookmarks.store';
+import { BookmarksStore } from '../../core/services/bookmarks.store';
 import { JobsStore } from '../../core/services/jobs.store';
+import { JobSitesStore } from '../../core/services/job-sites.store';
 import { ProfileStore } from '../../core/services/profile.store';
 import { JobOffer } from '../../core/models/api.models';
+import { I18nService } from '../../core/i18n/i18n.service';
 import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
 
 /** Tableau de bord : santé du profil, meilleures offres, suivi et critères. */
 @Component({
   selector: 'app-dashboard-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    LucideAngularModule,
-    RouterLink,
-    ScoreRingComponent,
-    DatePipe,
-  ],
+  imports: [LucideAngularModule, RouterLink, ScoreRingComponent],
   template: `
     <div class="mx-auto max-w-7xl space-y-6">
       <!-- En-tête -->
@@ -42,18 +39,18 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
         <div>
           <p class="badge-brand">
             <lucide-angular [img]="ChartIcon" class="size-3.5" />
-            Tableau de bord
+            {{ i18n.t('dashboard.title') }}
           </p>
           <h1 class="mt-3 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-            Bonjour {{ firstName() }} 👋
+            {{ i18n.t('dashboard.greeting', { name: firstName() }) }}
           </h1>
           <p class="mt-1.5 text-sm text-ink-500">
-            Vos recommandations, votre suivi et la qualité de votre profil en un coup d'œil.
+            {{ i18n.t('dashboard.subtitle') }}
           </p>
         </div>
         <a routerLink="/app/jobs" class="btn-primary">
           <lucide-angular [img]="BriefcaseIcon" class="size-4" />
-          Explorer les offres
+          {{ i18n.t('dashboard.explore') }}
         </a>
       </header>
 
@@ -61,7 +58,7 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
       <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <div class="card p-5">
           <div class="flex items-center justify-between">
-            <p class="text-xs font-semibold uppercase tracking-wide text-ink-500">Offres classées</p>
+            <p class="text-xs font-semibold uppercase tracking-wide text-ink-500">{{ i18n.t("dashboard.kpi.matches") }}</p>
             <span class="grid size-8 place-items-center rounded-lg bg-brand-50 text-brand-600">
               <lucide-angular [img]="BriefcaseIcon" class="size-4" />
             </span>
@@ -70,13 +67,13 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
             {{ jobsStore.total() }}
           </p>
           <p class="mt-1 text-xs text-ink-500">
-            Score moyen {{ jobsStore.facets()?.averageScore ?? 0 }}/100
+            {{ i18n.t("dashboard.kpi.average", { score: jobsStore.facets()?.averageScore ?? 0 }) }}
           </p>
         </div>
 
         <div class="card p-5">
           <div class="flex items-center justify-between">
-            <p class="text-xs font-semibold uppercase tracking-wide text-ink-500">Meilleur match</p>
+            <p class="text-xs font-semibold uppercase tracking-wide text-ink-500">{{ i18n.t("dashboard.kpi.best") }}</p>
             <span class="grid size-8 place-items-center rounded-lg bg-success-50 text-success-700">
               <lucide-angular [img]="TargetIcon" class="size-4" />
             </span>
@@ -85,13 +82,13 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
             {{ jobsStore.facets()?.topScore ?? 0 }}<span class="text-base text-ink-400">/100</span>
           </p>
           <p class="mt-1 truncate text-xs text-ink-500">
-            {{ topOffer()?.title ?? 'Complétez votre profil' }}
+            {{ topOffer()?.title ?? i18n.t('dashboard.onboarding.cta') }}
           </p>
         </div>
 
         <div class="card p-5">
           <div class="flex items-center justify-between">
-            <p class="text-xs font-semibold uppercase tracking-wide text-ink-500">Candidatures</p>
+            <p class="text-xs font-semibold uppercase tracking-wide text-ink-500">{{ i18n.t("dashboard.kpi.applications") }}</p>
             <span class="grid size-8 place-items-center rounded-lg bg-warn-50 text-warn-700">
               <lucide-angular [img]="SendIcon" class="size-4" />
             </span>
@@ -100,13 +97,13 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
             {{ bookmarks.stats()?.applied ?? 0 }}
           </p>
           <p class="mt-1 text-xs text-ink-500">
-            {{ bookmarks.total() }} offre(s) suivie(s) · {{ bookmarks.stats()?.responseRate ?? 0 }}% de réponses
+            {{ i18n.t("dashboard.kpi.tracked", { count: bookmarks.total(), rate: bookmarks.stats()?.responseRate ?? 0 }) }}
           </p>
         </div>
 
         <div class="card p-5">
           <div class="flex items-center justify-between">
-            <p class="text-xs font-semibold uppercase tracking-wide text-ink-500">Profil</p>
+            <p class="text-xs font-semibold uppercase tracking-wide text-ink-500">{{ i18n.t("dashboard.kpi.profile") }}</p>
             <span class="grid size-8 place-items-center rounded-lg bg-ink-100 text-ink-600">
               <lucide-angular [img]="UserIcon" class="size-4" />
             </span>
@@ -129,13 +126,13 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
           <header class="flex items-center justify-between border-b border-ink-100 px-5 py-4">
             <h2 class="flex items-center gap-2 text-sm font-bold">
               <lucide-angular [img]="SparklesIcon" class="size-4 text-brand-600" />
-              Vos meilleures correspondances
+              {{ i18n.t('dashboard.top.title') }}
             </h2>
             <a
               routerLink="/app/jobs"
               class="inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:text-brand-800"
             >
-              Tout voir
+              {{ i18n.t('dashboard.top.seeAll') }}
               <lucide-angular [img]="ArrowIcon" class="size-3.5" />
             </a>
           </header>
@@ -154,11 +151,11 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
             </div>
           } @else if (topOffers().length === 0) {
             <div class="p-6 text-center">
-              <p class="text-sm font-semibold text-ink-800">Aucune recommandation pour l'instant</p>
+              <p class="text-sm font-semibold text-ink-800">{{ i18n.t('dashboard.top.emptyTitle') }}</p>
               <p class="mt-1 text-sm text-ink-500">
-                Complétez votre profil pour activer le classement par pertinence.
+                {{ i18n.t('dashboard.top.emptyText') }}
               </p>
-              <a routerLink="/app/profile" class="btn-primary mt-4">Compléter mon profil</a>
+              <a routerLink="/app/profile" class="btn-primary mt-4">{{ i18n.t('dashboard.onboarding.cta') }}</a>
             </div>
           } @else {
             <ul class="divide-y divide-ink-100">
@@ -177,7 +174,7 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
                           <lucide-angular [img]="PinIcon" class="size-3" />
                           {{ offer.city }}
                         </span>
-                        <span>{{ offer.contractType }}</span>
+                        <span>{{ i18n.t('contract.' + offer.contractType) }}</span>
                       </p>
                     </div>
                     @if (offer.match.reasons[0]; as reason) {
@@ -194,11 +191,11 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
 
         <!-- Colonne latérale -->
         <div class="space-y-6">
-          <!-- Prochaines actions -->
+          <!-- {{ i18n.t('dashboard.actions.title') }} -->
           <section class="card p-5">
             <h2 class="mb-3 flex items-center gap-2 text-sm font-bold">
               <lucide-angular [img]="CalendarIcon" class="size-4 text-warn-700" />
-              Prochaines actions
+              {{ i18n.t('dashboard.actions.title') }}
             </h2>
             @if (bookmarks.upcoming().length) {
               <ul class="space-y-2.5">
@@ -210,8 +207,8 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
                     <div class="min-w-0">
                       <p class="truncate text-xs font-semibold text-ink-900">{{ bookmark.offer.title }}</p>
                       <p class="text-[11px] text-ink-500">
-                        {{ bookmark.nextActionAt | date: 'EEEE d MMMM' }} ·
-                        {{ labels[bookmark.status] }}
+                        {{ i18n.formatDate(bookmark.nextActionAt ?? '', { weekday: 'long', day: 'numeric', month: 'long' }) }} ·
+                        {{ i18n.t('status.' + bookmark.status) }}
                       </p>
                     </div>
                   </li>
@@ -219,8 +216,8 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
               </ul>
             } @else {
               <p class="rounded-xl border border-dashed border-ink-200 p-3 text-center text-xs text-ink-500">
-                Aucune relance planifiée.
-                <a routerLink="/app/bookmarks" class="link">Gérer mon suivi</a>
+                {{ i18n.t('dashboard.actions.empty') }}
+                <a routerLink="/app/bookmarks" class="link">{{ i18n.t('dashboard.actions.manage') }}</a>
               </p>
             }
           </section>
@@ -229,14 +226,14 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
           <section class="card p-5">
             <h2 class="mb-3 flex items-center gap-2 text-sm font-bold">
               <lucide-angular [img]="ChartIcon" class="size-4 text-brand-600" />
-              Entonnoir de candidature
+              {{ i18n.t('dashboard.funnel.title') }}
             </h2>
             @if (bookmarks.total()) {
               <ul class="space-y-2">
                 @for (row of funnel(); track row.status) {
                   <li>
                     <div class="mb-1 flex items-center justify-between text-xs">
-                      <span class="font-medium text-ink-700">{{ labels[row.status] }}</span>
+                      <span class="font-medium text-ink-700">{{ i18n.t('status.' + row.status) }}</span>
                       <span class="tabular-nums text-ink-500">{{ row.count }}</span>
                     </div>
                     <div class="h-1.5 overflow-hidden rounded-full bg-ink-100">
@@ -251,8 +248,39 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
               </ul>
             } @else {
               <p class="text-xs text-ink-500">
-                Sauvegardez des offres pour visualiser votre entonnoir.
+                {{ i18n.t('dashboard.funnel.empty') }}
               </p>
+            }
+          </section>
+
+          <!-- Sites d'emploi suivis -->
+          <section class="card p-5">
+            <div class="mb-3 flex items-center justify-between">
+              <h2 class="flex items-center gap-2 text-sm font-bold">
+                <lucide-angular [img]="GlobeIcon" class="size-4 text-brand-600" />
+                {{ i18n.t('dashboard.sites.title') }}
+              </h2>
+              <a routerLink="/app/sites" class="text-xs font-semibold text-brand-700">
+                {{ i18n.t('common.edit') }}
+              </a>
+            </div>
+            @if (sites.followed().length) {
+              <ul class="flex flex-wrap gap-1.5">
+                @for (site of sites.followed().slice(0, 6); track site.id) {
+                  <li class="badge">{{ site.customName || site.name }}</li>
+                }
+                @if (sites.followed().length > 6) {
+                  <li class="badge-brand">+{{ sites.followed().length - 6 }}</li>
+                }
+              </ul>
+              <p class="mt-3 text-xs text-ink-500">
+                {{ i18n.t('dashboard.sites.count', { count: sites.followedCount() }) }}
+              </p>
+            } @else {
+              <p class="text-xs text-ink-500">{{ i18n.t('sites.empty.followed') }}</p>
+              <a routerLink="/app/sites" class="btn-secondary mt-3 w-full">
+                {{ i18n.t('sites.follow') }}
+              </a>
             }
           </section>
 
@@ -262,9 +290,9 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
               <div class="mb-3 flex items-center justify-between">
                 <h2 class="flex items-center gap-2 text-sm font-bold">
                   <lucide-angular [img]="AwardIcon" class="size-4 text-brand-600" />
-                  Vos compétences clés
+                  {{ i18n.t('dashboard.skills.title') }}
                 </h2>
-                <a routerLink="/app/profile" class="text-xs font-semibold text-brand-700">Modifier</a>
+                <a routerLink="/app/profile" class="text-xs font-semibold text-brand-700">{{ i18n.t("common.edit") }}</a>
               </div>
               <ul class="space-y-2">
                 @for (skill of profileStore.topSkills(); track skill.slug) {
@@ -297,15 +325,15 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
             </span>
             <div>
               <p class="text-sm font-bold text-brand-900">
-                Votre profil est complété à {{ profileStore.completeness() }} %
+                {{ i18n.t("dashboard.onboarding.progress", { percent: profileStore.completeness() }) }}
               </p>
               <p class="text-sm text-brand-800/80">
-                Ajoutez vos compétences et vos prétentions pour affiner le classement.
+                {{ i18n.t("dashboard.onboarding.text") }}
               </p>
             </div>
           </div>
           <a routerLink="/app/profile" class="btn-primary shrink-0">
-            Affiner mon profil
+            {{ i18n.t("dashboard.onboarding.cta") }}
             <lucide-angular [img]="ArrowIcon" class="size-4" />
           </a>
         </section>
@@ -319,7 +347,8 @@ export class DashboardPageComponent implements OnInit {
   readonly profileStore = inject(ProfileStore);
   readonly bookmarks = inject(BookmarksStore);
 
-  readonly labels = STATUS_LABELS;
+  readonly i18n = inject(I18nService);
+  readonly sites = inject(JobSitesStore);
 
   readonly ChartIcon = ChartNoAxesColumn;
   readonly BriefcaseIcon = Briefcase;
@@ -336,6 +365,7 @@ export class DashboardPageComponent implements OnInit {
   readonly BookmarkIcon = Bookmark;
   readonly CheckIcon = CircleCheck;
   readonly TrendingIcon = TrendingUp;
+  readonly GlobeIcon = Globe;
 
   readonly firstName = computed(() => {
     const name = this.auth.user()?.fullName ?? '';
@@ -368,8 +398,8 @@ export class DashboardPageComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.profileStore.load();
+    this.profileStore.load().subscribe(() => this.jobsStore.load({ pageSize: 12 }));
     this.bookmarks.load();
-    this.jobsStore.load({ pageSize: 12 });
+    this.sites.load();
   }
 }

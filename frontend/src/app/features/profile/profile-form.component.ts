@@ -34,16 +34,15 @@ import {
   Trash2,
   WandSparkles,
 } from 'lucide-angular';
+import { I18nService } from '../../core/i18n/i18n.service';
 import {
-  CONTRACT_LABELS,
-  EXPERIENCE_LABELS,
-  WORK_MODE_LABELS,
   JobsStore,
 } from '../../core/services/jobs.store';
 import { ProfileStore } from '../../core/services/profile.store';
 import {
   ContractType,
   ExperienceLevel,
+  OfferLanguage,
   Profile,
   ProfilePayload,
   SkillOption,
@@ -109,21 +108,21 @@ const EMPTY_SKILLS: SkillEntry[] = [];
               <lucide-angular [img]="Sparkles" class="size-4.5" />
             </span>
             <div>
-              <h2 class="text-base font-bold">Poste recherché</h2>
-              <p class="text-xs text-ink-500">Ce que vous voulez faire, et à quel niveau.</p>
+              <h2 class="text-base font-bold">{{ i18n.t('profile.section.role') }}</h2>
+              <p class="text-xs text-ink-500">{{ i18n.t('profile.section.roleHint') }}</p>
             </div>
           </header>
 
           <div class="space-y-4">
             <div>
-              <label class="field-label" for="headline">Intitulé de poste</label>
+              <label class="field-label" for="headline">{{ i18n.t('profile.field.headline') }}</label>
               <input
                 id="headline"
                 type="text"
                 [formField]="profileForm.headline"
                 class="input"
                 [class.input-invalid]="showError('headline')"
-                placeholder="Ex. Développeur Full-Stack Angular / NestJS"
+                [placeholder]="i18n.t('profile.field.headlinePlaceholder')"
                 autocomplete="organization-title"
               />
               @if (showError('headline')) {
@@ -133,27 +132,27 @@ const EMPTY_SKILLS: SkillEntry[] = [];
                 </p>
               } @else {
                 <p class="field-hint">
-                  Ce libellé influence 20 % du score : reprenez les termes des offres visées.
+                  {{ i18n.t('profile.field.headlineHint') }}
                 </p>
               }
             </div>
 
             <div class="grid gap-4 sm:grid-cols-2">
               <div>
-                <label class="field-label" for="experienceLevel">Niveau d'expérience</label>
+                <label class="field-label" for="experienceLevel">{{ i18n.t('profile.field.experience') }}</label>
                 <select
                   id="experienceLevel"
                   [formField]="profileForm.experienceLevel"
                   class="select"
                 >
                   @for (option of experienceOptions; track option.value) {
-                    <option [value]="option.value">{{ option.label }}</option>
+                    <option [value]="option.value">{{ i18n.t(option.label) }}</option>
                   }
                 </select>
               </div>
 
               <div>
-                <label class="field-label" for="yearsExperience">Années d'expérience</label>
+                <label class="field-label" for="yearsExperience">{{ i18n.t('profile.field.years') }}</label>
                 <div class="flex items-center gap-2">
                   <button
                     type="button"
@@ -192,9 +191,9 @@ const EMPTY_SKILLS: SkillEntry[] = [];
                 <lucide-angular [img]="BadgeCheckIcon" class="size-4.5" />
               </span>
               <div>
-                <h2 class="text-base font-bold">Compétences</h2>
+                <h2 class="text-base font-bold">{{ i18n.t('profile.section.skills') }}</h2>
                 <p class="text-xs text-ink-500">
-                  Critère principal du matching (40 % du score).
+                  {{ i18n.t('profile.section.skillsHint') }}
                 </p>
               </div>
             </div>
@@ -287,7 +286,7 @@ const EMPTY_SKILLS: SkillEntry[] = [];
             </ul>
           } @else {
             <p class="mt-4 rounded-xl border border-dashed border-ink-300 p-4 text-center text-sm text-ink-500">
-              Ajoutez au moins 3 compétences pour un matching pertinent.
+              {{ i18n.t('profile.skills.minimum') }}
             </p>
           }
         </section>
@@ -299,14 +298,14 @@ const EMPTY_SKILLS: SkillEntry[] = [];
               <lucide-angular [img]="MapPinIcon" class="size-4.5" />
             </span>
             <div>
-              <h2 class="text-base font-bold">Localisation & rémunération</h2>
-              <p class="text-xs text-ink-500">Ville, rayon de recherche et prétentions.</p>
+              <h2 class="text-base font-bold">{{ i18n.t('profile.section.location') }}</h2>
+              <p class="text-xs text-ink-500">{{ i18n.t('profile.section.locationHint') }}</p>
             </div>
           </header>
 
           <div class="grid gap-4 sm:grid-cols-2">
             <div>
-              <label class="field-label" for="locationCity">Ville</label>
+              <label class="field-label" for="locationCity">{{ i18n.t('profile.field.city') }}</label>
               <input
                 id="locationCity"
                 type="text"
@@ -326,7 +325,7 @@ const EMPTY_SKILLS: SkillEntry[] = [];
 
             <div>
               <label class="field-label" for="radiusKm">
-                Rayon de recherche
+                {{ i18n.t('filters.radius') }}
                 <span class="ml-1 font-normal text-ink-500">{{ profileForm.radiusKm().value() }} km</span>
               </label>
               <input
@@ -339,7 +338,7 @@ const EMPTY_SKILLS: SkillEntry[] = [];
             </div>
 
             <div>
-              <label class="field-label" for="salaryMin">Prétentions salariales</label>
+              <label class="field-label" for="salaryMin">{{ i18n.t('profile.field.salary') }}</label>
               <div class="flex gap-2">
                 <div class="relative flex-1">
                   <input
@@ -360,15 +359,15 @@ const EMPTY_SKILLS: SkillEntry[] = [];
                   class="select w-32"
                   aria-label="Périodicité du salaire"
                 >
-                  <option value="YEAR">/ an</option>
-                  <option value="MONTH">/ mois</option>
-                  <option value="DAY">/ jour</option>
+                  <option value="YEAR">{{ i18n.t('profile.period.YEAR') }}</option>
+                  <option value="MONTH">{{ i18n.t('profile.period.MONTH') }}</option>
+                  <option value="DAY">{{ i18n.t('profile.period.DAY') }}</option>
                 </select>
               </div>
             </div>
 
             <div>
-              <label class="field-label" for="contractTypes">Types de contrat acceptés</label>
+              <label class="field-label" for="contractTypes">{{ i18n.t('profile.field.contracts') }}</label>
               <div class="flex flex-wrap gap-1.5" id="contractTypes">
                 @for (option of contractOptions; track option.value) {
                   <label class="chip">
@@ -377,14 +376,14 @@ const EMPTY_SKILLS: SkillEntry[] = [];
                       [checked]="contractTypes().includes(option.value)"
                       (change)="toggleContract(option.value)"
                     />
-                    {{ option.label }}
+                    {{ i18n.t(option.label) }}
                   </label>
                 }
               </div>
               @if (contractTypes().length === 0) {
                 <p class="field-error">
                   <lucide-angular [img]="CircleAlertIcon" class="size-3.5" />
-                  Sélectionnez au moins un type de contrat
+                  {{ i18n.t('profile.error.contracts') }}
                 </p>
               }
             </div>
@@ -398,14 +397,14 @@ const EMPTY_SKILLS: SkillEntry[] = [];
               <lucide-angular [img]="WandSparklesIcon" class="size-4.5" />
             </span>
             <div>
-              <h2 class="text-base font-bold">Mode de travail & présentation</h2>
-              <p class="text-xs text-ink-500">Télétravail accepté et résumé de votre parcours.</p>
+              <h2 class="text-base font-bold">{{ i18n.t('profile.section.workMode') }}</h2>
+              <p class="text-xs text-ink-500">{{ i18n.t('profile.section.workModeHint') }}</p>
             </div>
           </header>
 
           <div class="space-y-4">
             <div>
-              <span class="field-label">Modes de travail acceptés</span>
+              <span class="field-label">{{ i18n.t('profile.field.workModes') }}</span>
               <div class="flex flex-wrap gap-1.5">
                 @for (option of workModeOptions; track option.value) {
                   <label class="chip">
@@ -414,20 +413,38 @@ const EMPTY_SKILLS: SkillEntry[] = [];
                       [checked]="workModes().includes(option.value)"
                       (change)="toggleWorkMode(option.value)"
                     />
-                    {{ option.label }}
+                    {{ i18n.t(option.label) }}
                   </label>
                 }
               </div>
               @if (workModes().length === 0) {
                 <p class="field-error">
                   <lucide-angular [img]="CircleAlertIcon" class="size-3.5" />
-                  Sélectionnez au moins un mode de travail
+                  {{ i18n.t('profile.error.workModes') }}
                 </p>
               }
             </div>
 
+            <!-- Langues de rédaction acceptées -->
             <div>
-              <label class="field-label" for="bio">Présentation</label>
+              <span class="field-label">{{ i18n.t('filters.language') }}</span>
+              <div class="flex flex-wrap gap-1.5">
+                @for (option of languageOptions; track option.value) {
+                  <label class="chip">
+                    <input
+                      type="checkbox"
+                      [checked]="languages().includes(option.value)"
+                      (change)="toggleLanguage(option.value)"
+                    />
+                    {{ i18n.t(option.label) }}
+                  </label>
+                }
+              </div>
+              <p class="field-hint">{{ i18n.t('filters.languageHint') }}</p>
+            </div>
+
+            <div>
+              <label class="field-label" for="bio">{{ i18n.t('profile.field.bio') }}</label>
               <textarea
                 id="bio"
                 rows="4"
@@ -436,22 +453,22 @@ const EMPTY_SKILLS: SkillEntry[] = [];
                 placeholder="Votre parcours, vos spécialités, ce que vous recherchez…"
               ></textarea>
               <p class="field-hint">
-                {{ profileForm.bio().value().length }} / 2000 caractères
+                {{ i18n.t('profile.bioCount', { count: profileForm.bio().value().length }) }}
               </p>
             </div>
 
             <!-- Toggle de visibilité -->
             <div class="flex items-center justify-between gap-4 rounded-xl bg-ink-50 p-3.5">
               <div>
-                <p class="text-sm font-semibold text-ink-900">Profil actif</p>
+                <p class="text-sm font-semibold text-ink-900">{{ i18n.t('profile.active') }}</p>
                 <p class="text-xs text-ink-500">
-                  Désactivé, le profil n'est pas pris en compte pour les recommandations.
+                  {{ i18n.t('profile.activeHint') }}
                 </p>
               </div>
               <label class="toggle">
                 <input type="checkbox" [formField]="profileForm.isPublished" />
                 <span class="toggle-track"></span>
-                <span class="sr-only">Activer le profil pour les recommandations</span>
+                <span class="sr-only">{{ i18n.t('profile.activeToggle') }}</span>
               </label>
             </div>
           </div>
@@ -463,7 +480,7 @@ const EMPTY_SKILLS: SkillEntry[] = [];
         <div class="card overflow-hidden">
           <div class="bg-gradient-to-br from-brand-600 to-brand-800 p-5 text-white">
             <p class="text-xs font-semibold uppercase tracking-wider text-brand-200">
-              Complétion du profil
+              {{ i18n.t('profile.completeness') }}
             </p>
             <p class="mt-1 font-display text-4xl font-extrabold tabular-nums">
               {{ completeness() }}<span class="text-xl text-brand-200">%</span>
@@ -478,19 +495,19 @@ const EMPTY_SKILLS: SkillEntry[] = [];
 
           <dl class="divide-y divide-ink-100 px-5 py-2 text-sm">
             <div class="flex items-center justify-between py-2.5">
-              <dt class="text-ink-500">Compétences</dt>
+              <dt class="text-ink-500">{{ i18n.t('profile.section.skills') }}</dt>
               <dd class="font-semibold tabular-nums">{{ skills().length }}</dd>
             </div>
             <div class="flex items-center justify-between py-2.5">
-              <dt class="text-ink-500">Contrats</dt>
+              <dt class="text-ink-500">{{ i18n.t('profile.checklist.contracts') }}</dt>
               <dd class="font-semibold tabular-nums">{{ contractTypes().length }}</dd>
             </div>
             <div class="flex items-center justify-between py-2.5">
-              <dt class="text-ink-500">Modes</dt>
+              <dt class="text-ink-500">{{ i18n.t('profile.checklist.workModes') }}</dt>
               <dd class="font-semibold tabular-nums">{{ workModes().length }}</dd>
             </div>
             <div class="flex items-center justify-between py-2.5">
-              <dt class="text-ink-500">Prétentions</dt>
+              <dt class="text-ink-500">{{ i18n.t('profile.checklist.salary') }}</dt>
               <dd class="font-semibold tabular-nums">{{ salaryLabel() }}</dd>
             </div>
           </dl>
@@ -499,15 +516,15 @@ const EMPTY_SKILLS: SkillEntry[] = [];
             <button type="submit" class="btn-primary w-full" [disabled]="store.isSaving() || !isValid()">
               @if (store.isSaving()) {
                 <lucide-angular [img]="LoaderIcon" class="size-4 animate-spin" />
-                Enregistrement…
+                {{ i18n.t('common.saving') }}
               } @else {
                 <lucide-angular [img]="SaveIcon" class="size-4" />
-                Enregistrer mon profil
+                {{ i18n.t('profile.save') }}
               }
             </button>
             <button type="button" class="btn-secondary w-full" (click)="reset()">
               <lucide-angular [img]="RotateIcon" class="size-4" />
-              Réinitialiser
+              {{ i18n.t('common.reset') }}
             </button>
           </div>
         </div>
@@ -522,9 +539,8 @@ const EMPTY_SKILLS: SkillEntry[] = [];
         }
 
         <div class="surface-muted p-4 text-xs leading-relaxed text-ink-500">
-          <p class="mb-1 font-semibold text-ink-700">Comment le score est calculé ?</p>
-          Compétences 40 % · Intitulé 20 % · Rémunération 13 % · Expérience 10 % ·
-          Localisation 10 % · Contrat 7 %. Les critères non renseignés sont redistribués.
+          <p class="mb-1 font-semibold text-ink-700">{{ i18n.t('profile.weights.title') }}</p>
+          {{ i18n.t('profile.weights.text') }}
         </div>
       </aside>
     </form>
@@ -532,6 +548,7 @@ const EMPTY_SKILLS: SkillEntry[] = [];
 })
 export class ProfileFormComponent implements OnInit {
   readonly store = inject(ProfileStore);
+  readonly i18n = inject(I18nService);
   private readonly jobsStore = inject(JobsStore);
 
   /** Profil à éditer (null = création). */
@@ -551,17 +568,22 @@ export class ProfileFormComponent implements OnInit {
   readonly LoaderIcon = LoaderCircle;
   readonly WandSparklesIcon = WandSparkles;
 
-  readonly experienceOptions = Object.entries(EXPERIENCE_LABELS).map(([value, label]) => ({
-    value: value as ExperienceLevel,
-    label,
+  readonly experienceOptions = (
+    ['JUNIOR', 'INTERMEDIATE', 'SENIOR', 'LEAD'] as ExperienceLevel[]
+  ).map((value) => ({ value, label: `experience.${value}` }));
+
+  readonly contractOptions = (
+    ['CDI', 'CDD', 'STAGE', 'ALTERNANCE', 'FREELANCE', 'INTERIM'] as ContractType[]
+  ).map((value) => ({ value, label: `contract.${value}` }));
+
+  readonly workModeOptions = (['ONSITE', 'HYBRID', 'REMOTE'] as WorkMode[]).map((value) => ({
+    value,
+    label: `workMode.${value}`,
   }));
-  readonly contractOptions = Object.entries(CONTRACT_LABELS).map(([value, label]) => ({
-    value: value as ContractType,
-    label,
-  }));
-  readonly workModeOptions = Object.entries(WORK_MODE_LABELS).map(([value, label]) => ({
-    value: value as WorkMode,
-    label,
+
+  readonly languageOptions = (['FR', 'EN'] as OfferLanguage[]).map((value) => ({
+    value,
+    label: `language.${value}`,
   }));
 
   // --- État du formulaire -------------------------------------------------
@@ -570,6 +592,9 @@ export class ProfileFormComponent implements OnInit {
 
   readonly contractTypes = signal<ContractType[]>(['CDI']);
   readonly workModes = signal<WorkMode[]>(['HYBRID', 'REMOTE']);
+
+  /** Langues d'offres acceptées — pilote aussi le filtre du catalogue. */
+  readonly languages = signal<OfferLanguage[]>(['FR', 'EN']);
   readonly skillQuery = signal('');
   readonly catalog = signal<SkillOption[]>([]);
 
@@ -706,6 +731,13 @@ export class ProfileFormComponent implements OnInit {
     );
   }
 
+  toggleLanguage(value: OfferLanguage): void {
+    const current = this.languages();
+    this.languages.set(
+      current.includes(value) ? current.filter((entry) => entry !== value) : [...current, value],
+    );
+  }
+
   toggleWorkMode(value: WorkMode): void {
     this.workModes.update((current) =>
       current.includes(value)
@@ -770,6 +802,7 @@ export class ProfileFormComponent implements OnInit {
       this.model.set({ ...EMPTY_PROFILE });
       this.contractTypes.set(['CDI']);
       this.workModes.set(['HYBRID', 'REMOTE']);
+    this.languages.set(['FR', 'EN']);
       this.skills.set([]);
     }
     this.submitted.set(false);
@@ -792,6 +825,7 @@ export class ProfileFormComponent implements OnInit {
       radiusKm: Number(value.radiusKm),
       contractTypes: this.contractTypes(),
       workModes: this.workModes(),
+      languages: this.languages(),
       salaryMin: Number(value.salaryMin) || 0,
       salaryCurrency: 'EUR',
       salaryPeriod: value.salaryPeriod,

@@ -9,7 +9,8 @@ présente un catalogue filtrable avec favoris et suivi de candidatures.
 | **Frontend** | Angular 21 — standalone, Signals, Signal Forms, Tailwind CSS v4, Lucide |
 | **Backend** | NestJS 12 — modules Auth / Profile / Jobs / Bookmarks, JWT, class-validator |
 | **Base** | PostgreSQL 18 + Prisma 7 (driver adapter `pg`, moteur sans Rust) |
-| **Tests** | Jest (30 tests unitaires) · Vitest + jsdom (8 tests de composants) |
+| **Tests** | Jest (33 tests unitaires) · Vitest + jsdom (11 tests de composants) |
+| **Interface** | Bilingue FR / EN (détection navigateur + bascule), thème orange, responsive |
 
 📄 Décisions d'architecture, arbitrages et dette assumée :
 **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**
@@ -25,7 +26,7 @@ npm install
 cp .env.example .env            # renseignez JWT_SECRET au minimum
 
 npm run db:start                # démarre PostgreSQL en arrière-plan (rend la main)
-npm run db:setup                # crée les tables + 56 compétences + 28 offres
+npm run db:setup                # crée les tables + 56 compétences + 12 sites d'emploi
 
 npm run start:dev               # http://localhost:3000/api
 
@@ -35,7 +36,13 @@ npm install
 npm start                       # http://localhost:4200 (proxy /api → :3000)
 ```
 
-Compte de démonstration : **demo@jobradar.dev / Demo1234**
+**Aucune donnée de démonstration.** La base ne contient que des données de
+référence (catalogue de compétences, sites d'emploi, compte propriétaire) :
+les offres ne proviennent que des fournisseurs réels, et il faut créer un
+compte pour accéder à l'application (vitrine publique sur `/`).
+
+> Identifiants PostgreSQL locaux : **`dev` / `Prince@14`** — dans l'URL,
+> `@` doit être encodé : `postgresql://dev:Prince%4014@localhost:55432/jobradar`.
 
 `npm run db:start` est **idempotent** et **ne bloque pas le terminal** : le
 serveur est détaché, vous pouvez enchaîner les commandes dans la même fenêtre.
@@ -67,7 +74,7 @@ serveur est détaché, vous pouvez enchaîner les commandes dans la même fenêt
 | `npm run prisma:generate` | Régénère le client après modification du schéma |
 | `npm run db:migrate` | `prisma migrate deploy` (prod / CI) |
 | `npm run db:migrate:sql` | Fallback sans binaire schema-engine |
-| `npm run db:seed` | Données de démonstration idempotentes |
+| `npm run db:seed` | Données de référence (compétences, sites, compte propriétaire) |
 | `npm test` | Tests unitaires (moteur de scoring, mappers, extracteurs) |
 | `npm run typecheck` | `tsc --noEmit` sur la configuration de build |
 

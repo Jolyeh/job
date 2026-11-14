@@ -12,6 +12,40 @@ export type WorkMode = 'ONSITE' | 'HYBRID' | 'REMOTE';
 
 export type ExperienceLevel = 'JUNIOR' | 'INTERMEDIATE' | 'SENIOR' | 'LEAD';
 
+/** Langue de rédaction d'une offre (et de l'interface). */
+export type OfferLanguage = 'FR' | 'EN';
+
+export type JobSiteKind = 'JOB_BOARD' | 'ATS' | 'COMPANY' | 'NETWORK' | 'OTHER';
+
+/** Site d'emploi du catalogue, avec l'état d'abonnement de l'utilisateur. */
+export interface JobSite {
+  id: string;
+  slug: string;
+  name: string;
+  url: string;
+  kind: JobSiteKind;
+  country: string;
+  language: OfferLanguage;
+  description: string | null;
+  logoUrl: string | null;
+  isDefault: boolean;
+  position: number;
+  followed: boolean;
+  customName: string | null;
+  accountLabel: string | null;
+  notes: string | null;
+  offerCount: number;
+}
+
+export interface JobSitePayload {
+  jobSiteId?: string;
+  name?: string;
+  url?: string;
+  kind?: JobSiteKind;
+  accountLabel?: string;
+  notes?: string;
+}
+
 export type ApplicationStatus =
   | 'SAVED'
   | 'APPLIED'
@@ -64,6 +98,7 @@ export interface Profile {
   radiusKm: number;
   contractTypes: ContractType[];
   workModes: WorkMode[];
+  languages: OfferLanguage[];
   salaryMin: number | null;
   salaryCurrency: string;
   salaryPeriod: string;
@@ -85,6 +120,7 @@ export interface ProfilePayload {
   radiusKm: number;
   contractTypes: ContractType[];
   workModes: WorkMode[];
+  languages?: OfferLanguage[];
   salaryMin?: number;
   salaryCurrency: string;
   salaryPeriod: string;
@@ -121,6 +157,8 @@ export interface JobOffer {
   contractType: ContractType;
   workMode: WorkMode;
   experienceLevel: ExperienceLevel;
+  /** Langue de rédaction de l'annonce. */
+  language: OfferLanguage;
   salaryMin: number | null;
   salaryMax: number | null;
   salaryCurrency: string;
@@ -139,6 +177,7 @@ export interface JobSearchFilters {
   city?: string;
   contractType?: ContractType[];
   workMode?: WorkMode[];
+  languages?: OfferLanguage[];
   experienceLevel?: ExperienceLevel;
   salaryMin?: number;
   minScore?: number;
@@ -164,6 +203,7 @@ export interface JobSearchResponse {
   facets: {
     contractTypes: Facet[];
     workModes: Facet[];
+    languages: Facet[];
     sources: Facet[];
     averageScore: number;
     topScore: number;

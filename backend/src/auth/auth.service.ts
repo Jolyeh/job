@@ -12,6 +12,7 @@ import { AuthResponseDto } from './dto/auth-response.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { AuthUser } from '../common/decorators/current-user.decorator';
+import { JobSitesService } from '../job-sites/job-sites.service';
 
 export interface JwtPayload {
   sub: string;
@@ -31,6 +32,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
     private readonly config: ConfigService,
+    private readonly jobSites: JobSitesService,
   ) {}
 
   async register(dto: RegisterDto): Promise<AuthResponseDto> {
@@ -57,6 +59,14 @@ export class AuthService {
         tokenVersion: true,
       },
     });
+
+    // Les sites d'emploi marqués « par défaut » sont rattachés d'emblée :
+    // l'utilisateur peut les décocher, mais il n'a rien à faire pour démarrer.
+    await this.jobSites
+      .followDefaults(user.id)
+      .catch((error) =>
+        this.logger.warn(`Sites par défaut non rattachés : ${(error as Error).message}`),
+      );
 
     this.logger.log(`Nouveau compte créé : ${user.email}`);
     return this.buildAuthResponse(user);

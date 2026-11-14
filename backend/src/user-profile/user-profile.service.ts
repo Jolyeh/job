@@ -49,6 +49,7 @@ export class UserProfileService {
       radiusKm: profile.radiusKm,
       contractTypes: profile.contractTypes,
       workModes: profile.workModes,
+      languages: profile.languages,
       salaryMin: profile.salaryMin,
       salaryCurrency: profile.salaryCurrency,
       skills: profile.skills.map((entry) => ({
@@ -77,6 +78,7 @@ export class UserProfileService {
           radiusKm: dto.radiusKm,
           contractTypes: dto.contractTypes,
           workModes: dto.workModes,
+          languages: dto.languages ?? [],
           salaryMin: dto.salaryMin ?? 0,
           salaryCurrency: dto.salaryCurrency,
           salaryPeriod: dto.salaryPeriod,
@@ -92,6 +94,7 @@ export class UserProfileService {
           radiusKm: dto.radiusKm,
           contractTypes: dto.contractTypes,
           workModes: dto.workModes,
+          languages: dto.languages ?? [],
           salaryMin: dto.salaryMin ?? 0,
           salaryCurrency: dto.salaryCurrency,
           salaryPeriod: dto.salaryPeriod,
@@ -175,6 +178,7 @@ export class UserProfileService {
     radiusKm: number;
     contractTypes: ProfileResponseDto['contractTypes'];
     workModes: ProfileResponseDto['workModes'];
+    languages: ProfileResponseDto['languages'];
     salaryMin: number | null;
     salaryCurrency: string;
     salaryPeriod: string;

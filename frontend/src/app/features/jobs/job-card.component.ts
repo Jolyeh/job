@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
@@ -17,7 +16,7 @@ import {
 } from 'lucide-angular';
 import { JobOffer } from '../../core/models/api.models';
 import { BookmarksStore } from '../../core/services/bookmarks.store';
-import { CONTRACT_LABELS, EXPERIENCE_LABELS, WORK_MODE_LABELS } from '../../core/services/jobs.store';
+import { I18nService } from '../../core/i18n/i18n.service';
 import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
 
 /**
@@ -27,7 +26,7 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
 @Component({
   selector: 'app-job-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, ScoreRingComponent, LucideAngularModule, DatePipe],
+  imports: [RouterLink, ScoreRingComponent, LucideAngularModule],
   template: `
     <article
       class="card card-hover group flex h-full flex-col gap-4 p-5"
@@ -82,7 +81,7 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
         </li>
         <li class="inline-flex items-center gap-1">
           <lucide-angular [img]="ClockIcon" class="size-3.5 text-ink-400" />
-          {{ offer().publishedAt | date: 'd MMM' }}
+          {{ i18n.formatDate(offer().publishedAt, { day: 'numeric', month: 'short', year: undefined }) }}
         </li>
         @if (salaryLabel()) {
           <li class="inline-flex items-center gap-1 font-semibold text-ink-800">
@@ -94,6 +93,17 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
 
       <!-- Badges -->
       <div class="flex flex-wrap gap-1.5">
+        <span
+          class="badge"
+          [class]="
+            offer().language === 'FR'
+              ? 'bg-brand-50 text-brand-700'
+              : 'bg-ink-100 text-ink-600'
+          "
+          [attr.title]="i18n.t('language.offer.' + offer().language.toLowerCase())"
+        >
+          {{ offer().language }}
+        </span>
         <span class="badge-neutral">{{ contractLabel() }}</span>
         <span class="badge-neutral">{{ experienceLabel() }}</span>
         @for (skill of visibleSkills(); track skill.slug) {
@@ -136,14 +146,14 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
           [routerLink]="['/app/jobs', offer().id]"
           class="btn-secondary flex-1 py-2 text-xs sm:text-sm"
         >
-          Voir l'offre
+          {{ i18n.t('jobs.viewOffer') }}
         </a>
         <button
           type="button"
           class="btn-icon shrink-0"
           [class]="isBookmarked() ? 'text-brand-600 hover:bg-brand-50' : ''"
           [disabled]="isPending()"
-          [attr.aria-label]="isBookmarked() ? 'Retirer du suivi' : 'Sauvegarder cette offre'"
+          [attr.aria-label]="i18n.t(isBookmarked() ? 'bookmarks.remove' : 'bookmarks.add')"
           [attr.aria-pressed]="isBookmarked()"
           (click)="toggleBookmark()"
         >
@@ -158,7 +168,7 @@ import { ScoreRingComponent } from '../../shared/ui/score-ring.component';
           rel="noopener noreferrer"
           class="btn-primary py-2 text-xs sm:text-sm"
         >
-          Postuler
+          {{ i18n.t('jobs.apply') }}
           <lucide-angular [img]="ExternalIcon" class="size-3.5" />
         </a>
       </div>
@@ -169,6 +179,7 @@ export class JobCardComponent {
   readonly offer = input.required<JobOffer>();
 
   private readonly bookmarks = inject(BookmarksStore);
+  protected readonly i18n = inject(I18nService);
 
   readonly MapPinIcon = MapPin;
   readonly LaptopIcon = Laptop;
@@ -194,17 +205,15 @@ export class JobCardComponent {
       .join(''),
   );
 
-  readonly contractLabel = computed(() => CONTRACT_LABELS[this.offer().contractType]);
-  readonly workModeLabel = computed(() => WORK_MODE_LABELS[this.offer().workMode]);
-  readonly experienceLabel = computed(
-    () => EXPERIENCE_LABELS[this.offer().experienceLevel] ?? this.offer().experienceLevel,
-  );
+  readonly contractLabel = computed(() => this.i18n.t(`contract.${this.offer().contractType}`));
+  readonly workModeLabel = computed(() => this.i18n.t(`workMode.${this.offer().workMode}`));
+  readonly experienceLabel = computed(() => this.i18n.t(`experience.${this.offer().experienceLevel}`));
 
   readonly salaryLabel = computed(() => {
     const { salaryMin, salaryMax, salaryCurrency } = this.offer();
     if (!salaryMin && !salaryMax) return null;
     const format = (value: number) =>
-      new Intl.NumberFormat('fr-FR', {
+      new Intl.NumberFormat(this.i18n.locale(), {
         style: 'currency',
         currency: salaryCurrency,
         maximumFractionDigits: 0,

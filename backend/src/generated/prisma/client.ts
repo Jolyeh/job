@@ -80,6 +80,17 @@ export type Bookmark = Prisma.BookmarkModel
  */
 export type ApplicationEvent = Prisma.ApplicationEventModel
 /**
+ * Model JobSite
+ * Catalogue des sites d'emploi (LinkedIn, Indeed, Apec, ATS d'entreprises…).
+ * `isDefault` = proposé/suivi automatiquement à la création du compte.
+ */
+export type JobSite = Prisma.JobSiteModel
+/**
+ * Model UserJobSite
+ * Abonnement d'un utilisateur à un site (ajouté par défaut ou manuellement).
+ */
+export type UserJobSite = Prisma.UserJobSiteModel
+/**
  * Model SearchRun
  * 
  */

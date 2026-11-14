@@ -9,17 +9,19 @@
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Sora', 'Inter', ui-sans-serif, system-ui, sans-serif;
 
-  /* Palette de marque */
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-300: #a5b4fc;
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81;
+  /* Palette de marque — orange.
+     Contraste vérifié : blanc sur brand-600 (#c2410c) = 4,8:1 (AA texte large
+     et normal), brand-700/800 pour le texte sur fond clair. */
+  --color-brand-50: #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-200: #fed7aa;
+  --color-brand-300: #fdba74;
+  --color-brand-400: #fb923c;
+  --color-brand-500: #f97316;
+  --color-brand-600: #c2410c;
+  --color-brand-700: #9a3412;
+  --color-brand-800: #7c2d12;
+  --color-brand-900: #431407;
 
   --color-ink-50: #f8fafc;
   --color-ink-100: #f1f5f9;
@@ -32,8 +34,8 @@
   --color-ink-800: #1e293b;
   --color-ink-900: #0f172a;
 
-  --color-accent-400: #22d3ee;
-  --color-accent-500: #06b6d4;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
 
   --color-success-50: #ecfdf5;
   --color-success-500: #10b981;
@@ -50,7 +52,7 @@
   --radius-xl2: 1.25rem;
 
   --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
-  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.04), 0 18px 40px -20px rgb(79 70 229 / 0.35);
+  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.04), 0 18px 40px -20px rgb(194 65 12 / 0.3);
 }
 
 @layer base {
@@ -62,8 +64,8 @@
   body {
     @apply bg-ink-50 font-sans text-ink-800 antialiased;
     background-image:
-      radial-gradient(1200px 600px at 100% -10%, rgb(199 210 254 / 0.45), transparent 60%),
-      radial-gradient(900px 500px at -10% 0%, rgb(165 243 252 / 0.25), transparent 55%);
+      radial-gradient(1200px 600px at 100% -10%, rgb(254 215 170 / 0.45), transparent 60%),
+      radial-gradient(900px 500px at -10% 0%, rgb(253 186 116 / 0.22), transparent 55%);
     background-repeat: no-repeat;
     background-attachment: fixed;
   }

@@ -59,6 +59,8 @@ export const ModelName = {
   JobOfferSkill: 'JobOfferSkill',
   Bookmark: 'Bookmark',
   ApplicationEvent: 'ApplicationEvent',
+  JobSite: 'JobSite',
+  UserJobSite: 'UserJobSite',
   SearchRun: 'SearchRun'
 } as const
 
@@ -103,6 +105,7 @@ export const ProfileScalarFieldEnum = {
   radiusKm: 'radiusKm',
   contractTypes: 'contractTypes',
   workModes: 'workModes',
+  languages: 'languages',
   salaryMin: 'salaryMin',
   salaryCurrency: 'salaryCurrency',
   salaryPeriod: 'salaryPeriod',
@@ -149,6 +152,7 @@ export const JobOfferScalarFieldEnum = {
   contractType: 'contractType',
   workMode: 'workMode',
   experienceLevel: 'experienceLevel',
+  language: 'language',
   salaryMin: 'salaryMin',
   salaryMax: 'salaryMax',
   salaryCurrency: 'salaryCurrency',
@@ -161,7 +165,8 @@ export const JobOfferScalarFieldEnum = {
   syncedAt: 'syncedAt',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  jobSiteId: 'jobSiteId'
 } as const
 
 export type JobOfferScalarFieldEnum = (typeof JobOfferScalarFieldEnum)[keyof typeof JobOfferScalarFieldEnum]
@@ -203,6 +208,41 @@ export const ApplicationEventScalarFieldEnum = {
 } as const
 
 export type ApplicationEventScalarFieldEnum = (typeof ApplicationEventScalarFieldEnum)[keyof typeof ApplicationEventScalarFieldEnum]
+
+
+export const JobSiteScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  url: 'url',
+  kind: 'kind',
+  country: 'country',
+  language: 'language',
+  description: 'description',
+  logoUrl: 'logoUrl',
+  isDefault: 'isDefault',
+  isActive: 'isActive',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type JobSiteScalarFieldEnum = (typeof JobSiteScalarFieldEnum)[keyof typeof JobSiteScalarFieldEnum]
+
+
+export const UserJobSiteScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  jobSiteId: 'jobSiteId',
+  customName: 'customName',
+  accountLabel: 'accountLabel',
+  notes: 'notes',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserJobSiteScalarFieldEnum = (typeof UserJobSiteScalarFieldEnum)[keyof typeof UserJobSiteScalarFieldEnum]
 
 
 export const SearchRunScalarFieldEnum = {

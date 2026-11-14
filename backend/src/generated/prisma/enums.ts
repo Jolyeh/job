@@ -38,6 +38,25 @@ export const WorkMode = {
 export type WorkMode = (typeof WorkMode)[keyof typeof WorkMode]
 
 
+export const OfferLanguage = {
+  FR: 'FR',
+  EN: 'EN'
+} as const
+
+export type OfferLanguage = (typeof OfferLanguage)[keyof typeof OfferLanguage]
+
+
+export const JobSiteKind = {
+  JOB_BOARD: 'JOB_BOARD',
+  ATS: 'ATS',
+  COMPANY: 'COMPANY',
+  NETWORK: 'NETWORK',
+  OTHER: 'OTHER'
+} as const
+
+export type JobSiteKind = (typeof JobSiteKind)[keyof typeof JobSiteKind]
+
+
 export const ExperienceLevel = {
   JUNIOR: 'JUNIOR',
   INTERMEDIATE: 'INTERMEDIATE',

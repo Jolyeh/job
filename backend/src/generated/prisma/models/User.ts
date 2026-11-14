@@ -243,6 +243,7 @@ export type UserWhereInput = {
   profile?: Prisma.XOR<Prisma.ProfileNullableScalarRelationFilter, Prisma.ProfileWhereInput> | null
   bookmarks?: Prisma.BookmarkListRelationFilter
   searchRuns?: Prisma.SearchRunListRelationFilter
+  jobSites?: Prisma.UserJobSiteListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -257,6 +258,7 @@ export type UserOrderByWithRelationInput = {
   profile?: Prisma.ProfileOrderByWithRelationInput
   bookmarks?: Prisma.BookmarkOrderByRelationAggregateInput
   searchRuns?: Prisma.SearchRunOrderByRelationAggregateInput
+  jobSites?: Prisma.UserJobSiteOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -274,6 +276,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   profile?: Prisma.XOR<Prisma.ProfileNullableScalarRelationFilter, Prisma.ProfileWhereInput> | null
   bookmarks?: Prisma.BookmarkListRelationFilter
   searchRuns?: Prisma.SearchRunListRelationFilter
+  jobSites?: Prisma.UserJobSiteListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -318,6 +321,7 @@ export type UserCreateInput = {
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   searchRuns?: Prisma.SearchRunCreateNestedManyWithoutUserInput
+  jobSites?: Prisma.UserJobSiteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -332,6 +336,7 @@ export type UserUncheckedCreateInput = {
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   searchRuns?: Prisma.SearchRunUncheckedCreateNestedManyWithoutUserInput
+  jobSites?: Prisma.UserJobSiteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -346,6 +351,7 @@ export type UserUpdateInput = {
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   searchRuns?: Prisma.SearchRunUpdateManyWithoutUserNestedInput
+  jobSites?: Prisma.UserJobSiteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -360,6 +366,7 @@ export type UserUncheckedUpdateInput = {
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   searchRuns?: Prisma.SearchRunUncheckedUpdateManyWithoutUserNestedInput
+  jobSites?: Prisma.UserJobSiteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -494,6 +501,20 @@ export type UserUpdateOneRequiredWithoutBookmarksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBookmarksInput, Prisma.UserUpdateWithoutBookmarksInput>, Prisma.UserUncheckedUpdateWithoutBookmarksInput>
 }
 
+export type UserCreateNestedOneWithoutJobSitesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJobSitesInput, Prisma.UserUncheckedCreateWithoutJobSitesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJobSitesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutJobSitesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJobSitesInput, Prisma.UserUncheckedCreateWithoutJobSitesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJobSitesInput
+  upsert?: Prisma.UserUpsertWithoutJobSitesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutJobSitesInput, Prisma.UserUpdateWithoutJobSitesInput>, Prisma.UserUncheckedUpdateWithoutJobSitesInput>
+}
+
 export type UserCreateNestedOneWithoutSearchRunsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutSearchRunsInput, Prisma.UserUncheckedCreateWithoutSearchRunsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutSearchRunsInput
@@ -521,6 +542,7 @@ export type UserCreateWithoutProfileInput = {
   updatedAt?: Date | string
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   searchRuns?: Prisma.SearchRunCreateNestedManyWithoutUserInput
+  jobSites?: Prisma.UserJobSiteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
@@ -534,6 +556,7 @@ export type UserUncheckedCreateWithoutProfileInput = {
   updatedAt?: Date | string
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   searchRuns?: Prisma.SearchRunUncheckedCreateNestedManyWithoutUserInput
+  jobSites?: Prisma.UserJobSiteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -563,6 +586,7 @@ export type UserUpdateWithoutProfileInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   searchRuns?: Prisma.SearchRunUpdateManyWithoutUserNestedInput
+  jobSites?: Prisma.UserJobSiteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
@@ -576,6 +600,7 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   searchRuns?: Prisma.SearchRunUncheckedUpdateManyWithoutUserNestedInput
+  jobSites?: Prisma.UserJobSiteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBookmarksInput = {
@@ -589,6 +614,7 @@ export type UserCreateWithoutBookmarksInput = {
   updatedAt?: Date | string
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   searchRuns?: Prisma.SearchRunCreateNestedManyWithoutUserInput
+  jobSites?: Prisma.UserJobSiteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBookmarksInput = {
@@ -602,6 +628,7 @@ export type UserUncheckedCreateWithoutBookmarksInput = {
   updatedAt?: Date | string
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   searchRuns?: Prisma.SearchRunUncheckedCreateNestedManyWithoutUserInput
+  jobSites?: Prisma.UserJobSiteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBookmarksInput = {
@@ -631,6 +658,7 @@ export type UserUpdateWithoutBookmarksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   searchRuns?: Prisma.SearchRunUpdateManyWithoutUserNestedInput
+  jobSites?: Prisma.UserJobSiteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBookmarksInput = {
@@ -643,6 +671,79 @@ export type UserUncheckedUpdateWithoutBookmarksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
+  searchRuns?: Prisma.SearchRunUncheckedUpdateManyWithoutUserNestedInput
+  jobSites?: Prisma.UserJobSiteUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutJobSitesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  fullName: string
+  role?: $Enums.UserRole
+  tokenVersion?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
+  searchRuns?: Prisma.SearchRunCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutJobSitesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  fullName: string
+  role?: $Enums.UserRole
+  tokenVersion?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
+  searchRuns?: Prisma.SearchRunUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutJobSitesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutJobSitesInput, Prisma.UserUncheckedCreateWithoutJobSitesInput>
+}
+
+export type UserUpsertWithoutJobSitesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutJobSitesInput, Prisma.UserUncheckedUpdateWithoutJobSitesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutJobSitesInput, Prisma.UserUncheckedCreateWithoutJobSitesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutJobSitesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutJobSitesInput, Prisma.UserUncheckedUpdateWithoutJobSitesInput>
+}
+
+export type UserUpdateWithoutJobSitesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  tokenVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
+  searchRuns?: Prisma.SearchRunUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutJobSitesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  tokenVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   searchRuns?: Prisma.SearchRunUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -657,6 +758,7 @@ export type UserCreateWithoutSearchRunsInput = {
   updatedAt?: Date | string
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
+  jobSites?: Prisma.UserJobSiteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSearchRunsInput = {
@@ -670,6 +772,7 @@ export type UserUncheckedCreateWithoutSearchRunsInput = {
   updatedAt?: Date | string
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
+  jobSites?: Prisma.UserJobSiteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSearchRunsInput = {
@@ -699,6 +802,7 @@ export type UserUpdateWithoutSearchRunsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
+  jobSites?: Prisma.UserJobSiteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSearchRunsInput = {
@@ -712,6 +816,7 @@ export type UserUncheckedUpdateWithoutSearchRunsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
+  jobSites?: Prisma.UserJobSiteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -722,11 +827,13 @@ export type UserUncheckedUpdateWithoutSearchRunsInput = {
 export type UserCountOutputType = {
   bookmarks: number
   searchRuns: number
+  jobSites: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bookmarks?: boolean | UserCountOutputTypeCountBookmarksArgs
   searchRuns?: boolean | UserCountOutputTypeCountSearchRunsArgs
+  jobSites?: boolean | UserCountOutputTypeCountJobSitesArgs
 }
 
 /**
@@ -753,6 +860,13 @@ export type UserCountOutputTypeCountSearchRunsArgs<ExtArgs extends runtime.Types
   where?: Prisma.SearchRunWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountJobSitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserJobSiteWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -766,6 +880,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   bookmarks?: boolean | Prisma.User$bookmarksArgs<ExtArgs>
   searchRuns?: boolean | Prisma.User$searchRunsArgs<ExtArgs>
+  jobSites?: boolean | Prisma.User$jobSitesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -807,6 +922,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   bookmarks?: boolean | Prisma.User$bookmarksArgs<ExtArgs>
   searchRuns?: boolean | Prisma.User$searchRunsArgs<ExtArgs>
+  jobSites?: boolean | Prisma.User$jobSitesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -818,6 +934,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     profile: Prisma.$ProfilePayload<ExtArgs> | null
     bookmarks: Prisma.$BookmarkPayload<ExtArgs>[]
     searchRuns: Prisma.$SearchRunPayload<ExtArgs>[]
+    jobSites: Prisma.$UserJobSitePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1228,6 +1345,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   profile<T extends Prisma.User$profileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   bookmarks<T extends Prisma.User$bookmarksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   searchRuns<T extends Prisma.User$searchRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$searchRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SearchRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  jobSites<T extends Prisma.User$jobSitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$jobSitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserJobSitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1722,6 +1840,30 @@ export type User$searchRunsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.SearchRunScalarFieldEnum | Prisma.SearchRunScalarFieldEnum[]
+}
+
+/**
+ * User.jobSites
+ */
+export type User$jobSitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserJobSite
+   */
+  select?: Prisma.UserJobSiteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserJobSite
+   */
+  omit?: Prisma.UserJobSiteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserJobSiteInclude<ExtArgs> | null
+  where?: Prisma.UserJobSiteWhereInput
+  orderBy?: Prisma.UserJobSiteOrderByWithRelationInput | Prisma.UserJobSiteOrderByWithRelationInput[]
+  cursor?: Prisma.UserJobSiteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserJobSiteScalarFieldEnum | Prisma.UserJobSiteScalarFieldEnum[]
 }
 
 /**

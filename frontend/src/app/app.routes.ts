@@ -5,9 +5,18 @@ import { guestGuard } from './core/guards/guest.guard';
 /**
  * Routage par lazy loading (`loadComponent`) : chaque écran est un chunk
  * séparé et un composant standalone.
+ *
+ * Ordre voulu par le produit : **vitrine publique → tableau de bord → offres**.
+ * La vitrine est la seule route publique ; tout `/app/**` exige une session.
  */
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'app/jobs' },
+  {
+    path: '',
+    pathMatch: 'full',
+    title: 'JobRadar — Trouvez les offres qui vous correspondent',
+    loadComponent: () =>
+      import('./features/landing/landing.page').then((module) => module.LandingPageComponent),
+  },
   {
     path: 'login',
     canActivate: [guestGuard],
@@ -28,7 +37,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./layout/app-shell.component').then((module) => module.AppShellComponent),
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'jobs' },
+      // Le tableau de bord est le point d'entrée de l'espace connecté.
+      { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+      {
+        path: 'dashboard',
+        title: 'Tableau de bord — JobRadar',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard.page').then((module) => module.DashboardPageComponent),
+      },
       {
         path: 'jobs',
         title: 'Offres recommandées — JobRadar',
@@ -42,16 +58,16 @@ export const routes: Routes = [
           import('./features/jobs/job-detail.page').then((module) => module.JobDetailPageComponent),
       },
       {
-        path: 'dashboard',
-        title: 'Tableau de bord — JobRadar',
-        loadComponent: () =>
-          import('./features/dashboard/dashboard.page').then((module) => module.DashboardPageComponent),
-      },
-      {
         path: 'bookmarks',
         title: 'Mon suivi de candidatures — JobRadar',
         loadComponent: () =>
           import('./features/bookmarks/bookmarks.page').then((module) => module.BookmarksPageComponent),
+      },
+      {
+        path: 'sites',
+        title: 'Sites d’emploi — JobRadar',
+        loadComponent: () =>
+          import('./features/job-sites/job-sites.page').then((module) => module.JobSitesPageComponent),
       },
       {
         path: 'profile',
@@ -61,5 +77,6 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: '**', redirectTo: 'app/jobs' },
+  // Toute URL inconnue ramène à la vitrine (et non plus aux offres).
+  { path: '**', redirectTo: '' },
 ];

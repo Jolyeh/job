@@ -1,6 +1,7 @@
 import {
   ContractType,
   ExperienceLevel,
+  OfferLanguage,
   WorkMode,
 } from '../../generated/prisma/enums';
 
@@ -22,6 +23,7 @@ export interface ProfileResponseDto {
   radiusKm: number;
   contractTypes: ContractType[];
   workModes: WorkMode[];
+  languages: OfferLanguage[];
   salaryMin: number | null;
   salaryCurrency: string;
   salaryPeriod: string;

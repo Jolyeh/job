@@ -5,12 +5,14 @@ import {
   JobOffer,
   JobSearchFilters,
   JobSearchResponse,
+  OfferLanguage,
   SkillOption,
   WorkMode,
 } from '../models/api.models';
 import { ApiError, ApiService } from './api.service';
 import { ProfileStore } from './profile.store';
 import { UiStore } from './ui.store';
+import { I18nService } from '../i18n/i18n.service';
 
 export const DEFAULT_FILTERS: JobSearchFilters = {
   sort: 'relevance',
@@ -34,6 +36,11 @@ export const WORK_MODE_LABELS: Record<WorkMode, string> = {
   REMOTE: 'Télétravail',
 };
 
+export const LANGUAGE_LABELS: Record<OfferLanguage, string> = {
+  FR: 'Français',
+  EN: 'English',
+};
+
 export const EXPERIENCE_LABELS: Record<string, string> = {
   JUNIOR: 'Junior',
   INTERMEDIATE: 'Confirmé',
@@ -53,12 +60,15 @@ export class JobsStore {
   private readonly api = inject(ApiService);
   private readonly profileStore = inject(ProfileStore);
   private readonly ui = inject(UiStore);
+  private readonly i18n = inject(I18nService);
 
   private readonly filtersState = signal<JobSearchFilters>({ ...DEFAULT_FILTERS });
   private readonly resultState = signal<JobSearchResponse | null>(null);
   private readonly loadingState = signal(false);
   private readonly refreshingState = signal(false);
   private readonly errorState = signal<string | null>(null);
+  /** Vrai dès que les langues du profil ont servi de valeurs par défaut. */
+  private languagesSeeded = false;
 
   readonly filters = this.filtersState.asReadonly();
   readonly isLoading = this.loadingState.asReadonly();
@@ -83,6 +93,7 @@ export class JobsStore {
     if (filters.city) count += 1;
     if (filters.contractType?.length) count += filters.contractType.length;
     if (filters.workMode?.length) count += filters.workMode.length;
+    if (filters.languages?.length) count += filters.languages.length;
     if (filters.experienceLevel) count += 1;
     if (filters.minScore) count += 1;
     if (filters.maxAgeDays) count += 1;
@@ -90,9 +101,22 @@ export class JobsStore {
     return count;
   });
 
-  /** Charge les offres en appliquant les filtres courants. */
+  /**
+   * Charge les offres en appliquant les filtres courants.
+   *
+   * Au premier chargement, le filtre de langue est initialisé avec les langues
+   * du profil : l'API applique déjà ce défaut côté serveur, donc l'afficher
+   * évite un décalage entre les puces cochées et les résultats reçus.
+   */
   load(overrides: Partial<JobSearchFilters> = {}): void {
     const filters: JobSearchFilters = { ...this.filtersState(), ...overrides };
+    if (filters.languages === undefined) {
+      const profileLanguages = this.profileStore.languages();
+      if (profileLanguages.length) {
+        filters.languages = [...profileLanguages];
+        this.languagesSeeded = true;
+      }
+    }
     this.filtersState.set(filters);
     this.loadingState.set(true);
     this.errorState.set(null);
@@ -119,12 +143,14 @@ export class JobsStore {
     this.load({ ...patch, ...(resetsPage ? { page: 1 } : {}) });
   }
 
-  /** Bascule une valeur dans un filtre multivalué (contrat, télétravail…). */
-  toggleMulti<K extends 'contractType' | 'workMode'>(
+  /** Bascule une valeur dans un filtre multivalué (contrat, mode, langue). */
+  toggleMulti<K extends 'contractType' | 'workMode' | 'languages'>(
     key: K,
-    value: ContractType | WorkMode,
+    value: ContractType | WorkMode | OfferLanguage,
   ): void {
-    const current = (this.filtersState()[key] ?? []) as Array<ContractType | WorkMode>;
+    const current = (this.filtersState()[key] ?? []) as Array<
+      ContractType | WorkMode | OfferLanguage
+    >;
     const next = current.includes(value)
       ? current.filter((entry) => entry !== value)
       : [...current, value];
@@ -132,7 +158,12 @@ export class JobsStore {
   }
 
   resetFilters(): void {
-    this.load({ ...DEFAULT_FILTERS });
+    // Les langues du profil redeviennent le défaut après réinitialisation.
+    const profileLanguages = this.profileStore.languages();
+    this.load({
+      ...DEFAULT_FILTERS,
+      ...(profileLanguages.length ? { languages: [...profileLanguages] } : {}),
+    });
   }
 
   goToPage(page: number): void {
@@ -148,7 +179,7 @@ export class JobsStore {
       .pipe(
         tap((result) => {
           this.resultState.set(result);
-          this.ui.notify('Sources synchronisées.', 'success');
+          this.ui.notify(this.i18n.t('toast.sourcesSynced'), 'success');
         }),
         catchError((error: unknown) => {
           this.ui.notify((error as ApiError).message, 'error');
@@ -182,6 +213,7 @@ export function toQuery(filters: JobSearchFilters): Record<string, string | numb
     city: filters.city,
     contractType: filters.contractType,
     workMode: filters.workMode,
+    languages: filters.languages,
     experienceLevel: filters.experienceLevel,
     salaryMin: filters.salaryMin,
     minScore: filters.minScore,

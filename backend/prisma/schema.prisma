@@ -42,6 +42,22 @@ enum WorkMode {
   REMOTE
 }
 
+/// Langue de rédaction de l'offre : sert au filtrage (évite les offres
+/// illisibles pour l'utilisateur) et à l'affichage.
+enum OfferLanguage {
+  FR
+  EN
+}
+
+/// Type de site d'emploi suivi par l'utilisateur.
+enum JobSiteKind {
+  JOB_BOARD
+  ATS
+  COMPANY
+  NETWORK
+  OTHER
+}
+
 enum ExperienceLevel {
   JUNIOR
   INTERMEDIATE
@@ -74,9 +90,10 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  profile   Profile?
-  bookmarks Bookmark[]
+  profile    Profile?
+  bookmarks  Bookmark[]
   searchRuns SearchRun[]
+  jobSites   UserJobSite[]
 
   @@map("users")
 }
@@ -97,6 +114,8 @@ model Profile {
 
   contractTypes ContractType[] @default([CDI])
   workModes     WorkMode[]     @default([HYBRID, ONSITE])
+  /// Langues d'offres acceptées (vide = pas de filtre).
+  languages     OfferLanguage[] @default([])
 
   salaryMin      Int?    @default(0)
   salaryCurrency String  @default("EUR")
@@ -164,6 +183,8 @@ model JobOffer {
   contractType   ContractType
   workMode       WorkMode   @default(ONSITE)
   experienceLevel ExperienceLevel @default(INTERMEDIATE)
+  /// Langue de rédaction : permet de filtrer les offres illisibles.
+  language       OfferLanguage   @default(FR)
 
   salaryMin Int?
   salaryMax Int?
@@ -186,12 +207,16 @@ model JobOffer {
 
   skills    JobOfferSkill[]
   bookmarks Bookmark[]
+  jobSite   JobSite? @relation(fields: [jobSiteId], references: [id], onDelete: SetNull)
+  /// Site d'emploi d'où provient l'offre (facultatif : agrégateurs génériques).
+  jobSiteId String?  @db.Uuid
 
   /// Un même poste ne peut exister qu'une fois par source.
   @@unique([source, externalId])
   @@index([publishedAt(sort: Desc)])
   @@index([city])
   @@index([contractType, workMode])
+  @@index([language])
   @@index([title])
   @@index([company])
   @@map("job_offers")
@@ -254,6 +279,61 @@ model ApplicationEvent {
 
   @@index([bookmarkId, createdAt])
   @@map("application_events")
+}
+
+// -----------------------------------------------------------------------------
+//  Sites d'emploi suivis par l'utilisateur
+// -----------------------------------------------------------------------------
+
+/// Catalogue des sites d'emploi (LinkedIn, Indeed, Apec, ATS d'entreprises…).
+/// `isDefault` = proposé/suivi automatiquement à la création du compte.
+model JobSite {
+  id          String      @id @default(uuid()) @db.Uuid
+  slug        String      @unique
+  name        String
+  url         String
+  kind        JobSiteKind @default(JOB_BOARD)
+  /// Pays principal du site (FR, EU, INT…).
+  country     String      @default("FR")
+  /// Langue principale des offres du site.
+  language    OfferLanguage @default(FR)
+  description String?     @db.Text
+  logoUrl     String?
+  isDefault   Boolean     @default(false)
+  isActive    Boolean     @default(true)
+  /// Ordre d'affichage dans l'interface.
+  position    Int         @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  followers UserJobSite[]
+  offers    JobOffer[]
+
+  @@index([kind])
+  @@map("job_sites")
+}
+
+/// Abonnement d'un utilisateur à un site (ajouté par défaut ou manuellement).
+model UserJobSite {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  jobSiteId String   @db.Uuid
+  /// Nom personnalisé (facultatif) pour les sites ajoutés à la main.
+  customName String?
+  /// Identifiant de l'utilisateur sur ce site (facultatif, pour s'y retrouver).
+  accountLabel String?
+  notes     String?  @db.Text
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobSite JobSite @relation(fields: [jobSiteId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, jobSiteId])
+  @@index([userId])
+  @@map("user_job_sites")
 }
 
 // -----------------------------------------------------------------------------

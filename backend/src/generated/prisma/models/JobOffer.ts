@@ -48,6 +48,7 @@ export type JobOfferMinAggregateOutputType = {
   contractType: $Enums.ContractType | null
   workMode: $Enums.WorkMode | null
   experienceLevel: $Enums.ExperienceLevel | null
+  language: $Enums.OfferLanguage | null
   salaryMin: number | null
   salaryMax: number | null
   salaryCurrency: string | null
@@ -59,6 +60,7 @@ export type JobOfferMinAggregateOutputType = {
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  jobSiteId: string | null
 }
 
 export type JobOfferMaxAggregateOutputType = {
@@ -73,6 +75,7 @@ export type JobOfferMaxAggregateOutputType = {
   contractType: $Enums.ContractType | null
   workMode: $Enums.WorkMode | null
   experienceLevel: $Enums.ExperienceLevel | null
+  language: $Enums.OfferLanguage | null
   salaryMin: number | null
   salaryMax: number | null
   salaryCurrency: string | null
@@ -84,6 +87,7 @@ export type JobOfferMaxAggregateOutputType = {
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  jobSiteId: string | null
 }
 
 export type JobOfferCountAggregateOutputType = {
@@ -98,6 +102,7 @@ export type JobOfferCountAggregateOutputType = {
   contractType: number
   workMode: number
   experienceLevel: number
+  language: number
   salaryMin: number
   salaryMax: number
   salaryCurrency: number
@@ -111,6 +116,7 @@ export type JobOfferCountAggregateOutputType = {
   isActive: number
   createdAt: number
   updatedAt: number
+  jobSiteId: number
   _all: number
 }
 
@@ -137,6 +143,7 @@ export type JobOfferMinAggregateInputType = {
   contractType?: true
   workMode?: true
   experienceLevel?: true
+  language?: true
   salaryMin?: true
   salaryMax?: true
   salaryCurrency?: true
@@ -148,6 +155,7 @@ export type JobOfferMinAggregateInputType = {
   isActive?: true
   createdAt?: true
   updatedAt?: true
+  jobSiteId?: true
 }
 
 export type JobOfferMaxAggregateInputType = {
@@ -162,6 +170,7 @@ export type JobOfferMaxAggregateInputType = {
   contractType?: true
   workMode?: true
   experienceLevel?: true
+  language?: true
   salaryMin?: true
   salaryMax?: true
   salaryCurrency?: true
@@ -173,6 +182,7 @@ export type JobOfferMaxAggregateInputType = {
   isActive?: true
   createdAt?: true
   updatedAt?: true
+  jobSiteId?: true
 }
 
 export type JobOfferCountAggregateInputType = {
@@ -187,6 +197,7 @@ export type JobOfferCountAggregateInputType = {
   contractType?: true
   workMode?: true
   experienceLevel?: true
+  language?: true
   salaryMin?: true
   salaryMax?: true
   salaryCurrency?: true
@@ -200,6 +211,7 @@ export type JobOfferCountAggregateInputType = {
   isActive?: true
   createdAt?: true
   updatedAt?: true
+  jobSiteId?: true
   _all?: true
 }
 
@@ -301,6 +313,7 @@ export type JobOfferGroupByOutputType = {
   contractType: $Enums.ContractType
   workMode: $Enums.WorkMode
   experienceLevel: $Enums.ExperienceLevel
+  language: $Enums.OfferLanguage
   salaryMin: number | null
   salaryMax: number | null
   salaryCurrency: string
@@ -314,6 +327,7 @@ export type JobOfferGroupByOutputType = {
   isActive: boolean
   createdAt: Date
   updatedAt: Date
+  jobSiteId: string | null
   _count: JobOfferCountAggregateOutputType | null
   _avg: JobOfferAvgAggregateOutputType | null
   _sum: JobOfferSumAggregateOutputType | null
@@ -351,6 +365,7 @@ export type JobOfferWhereInput = {
   contractType?: Prisma.EnumContractTypeFilter<"JobOffer"> | $Enums.ContractType
   workMode?: Prisma.EnumWorkModeFilter<"JobOffer"> | $Enums.WorkMode
   experienceLevel?: Prisma.EnumExperienceLevelFilter<"JobOffer"> | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFilter<"JobOffer"> | $Enums.OfferLanguage
   salaryMin?: Prisma.IntNullableFilter<"JobOffer"> | number | null
   salaryMax?: Prisma.IntNullableFilter<"JobOffer"> | number | null
   salaryCurrency?: Prisma.StringFilter<"JobOffer"> | string
@@ -364,8 +379,10 @@ export type JobOfferWhereInput = {
   isActive?: Prisma.BoolFilter<"JobOffer"> | boolean
   createdAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
+  jobSiteId?: Prisma.UuidNullableFilter<"JobOffer"> | string | null
   skills?: Prisma.JobOfferSkillListRelationFilter
   bookmarks?: Prisma.BookmarkListRelationFilter
+  jobSite?: Prisma.XOR<Prisma.JobSiteNullableScalarRelationFilter, Prisma.JobSiteWhereInput> | null
 }
 
 export type JobOfferOrderByWithRelationInput = {
@@ -380,6 +397,7 @@ export type JobOfferOrderByWithRelationInput = {
   contractType?: Prisma.SortOrder
   workMode?: Prisma.SortOrder
   experienceLevel?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   salaryMin?: Prisma.SortOrderInput | Prisma.SortOrder
   salaryMax?: Prisma.SortOrderInput | Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrder
@@ -393,8 +411,10 @@ export type JobOfferOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  jobSiteId?: Prisma.SortOrderInput | Prisma.SortOrder
   skills?: Prisma.JobOfferSkillOrderByRelationAggregateInput
   bookmarks?: Prisma.BookmarkOrderByRelationAggregateInput
+  jobSite?: Prisma.JobSiteOrderByWithRelationInput
 }
 
 export type JobOfferWhereUniqueInput = Prisma.AtLeast<{
@@ -413,6 +433,7 @@ export type JobOfferWhereUniqueInput = Prisma.AtLeast<{
   contractType?: Prisma.EnumContractTypeFilter<"JobOffer"> | $Enums.ContractType
   workMode?: Prisma.EnumWorkModeFilter<"JobOffer"> | $Enums.WorkMode
   experienceLevel?: Prisma.EnumExperienceLevelFilter<"JobOffer"> | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFilter<"JobOffer"> | $Enums.OfferLanguage
   salaryMin?: Prisma.IntNullableFilter<"JobOffer"> | number | null
   salaryMax?: Prisma.IntNullableFilter<"JobOffer"> | number | null
   salaryCurrency?: Prisma.StringFilter<"JobOffer"> | string
@@ -426,8 +447,10 @@ export type JobOfferWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"JobOffer"> | boolean
   createdAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
+  jobSiteId?: Prisma.UuidNullableFilter<"JobOffer"> | string | null
   skills?: Prisma.JobOfferSkillListRelationFilter
   bookmarks?: Prisma.BookmarkListRelationFilter
+  jobSite?: Prisma.XOR<Prisma.JobSiteNullableScalarRelationFilter, Prisma.JobSiteWhereInput> | null
 }, "id" | "source_externalId">
 
 export type JobOfferOrderByWithAggregationInput = {
@@ -442,6 +465,7 @@ export type JobOfferOrderByWithAggregationInput = {
   contractType?: Prisma.SortOrder
   workMode?: Prisma.SortOrder
   experienceLevel?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   salaryMin?: Prisma.SortOrderInput | Prisma.SortOrder
   salaryMax?: Prisma.SortOrderInput | Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrder
@@ -455,6 +479,7 @@ export type JobOfferOrderByWithAggregationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  jobSiteId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.JobOfferCountOrderByAggregateInput
   _avg?: Prisma.JobOfferAvgOrderByAggregateInput
   _max?: Prisma.JobOfferMaxOrderByAggregateInput
@@ -477,6 +502,7 @@ export type JobOfferScalarWhereWithAggregatesInput = {
   contractType?: Prisma.EnumContractTypeWithAggregatesFilter<"JobOffer"> | $Enums.ContractType
   workMode?: Prisma.EnumWorkModeWithAggregatesFilter<"JobOffer"> | $Enums.WorkMode
   experienceLevel?: Prisma.EnumExperienceLevelWithAggregatesFilter<"JobOffer"> | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageWithAggregatesFilter<"JobOffer"> | $Enums.OfferLanguage
   salaryMin?: Prisma.IntNullableWithAggregatesFilter<"JobOffer"> | number | null
   salaryMax?: Prisma.IntNullableWithAggregatesFilter<"JobOffer"> | number | null
   salaryCurrency?: Prisma.StringWithAggregatesFilter<"JobOffer"> | string
@@ -490,6 +516,7 @@ export type JobOfferScalarWhereWithAggregatesInput = {
   isActive?: Prisma.BoolWithAggregatesFilter<"JobOffer"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"JobOffer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"JobOffer"> | Date | string
+  jobSiteId?: Prisma.UuidNullableWithAggregatesFilter<"JobOffer"> | string | null
 }
 
 export type JobOfferCreateInput = {
@@ -504,6 +531,7 @@ export type JobOfferCreateInput = {
   contractType: $Enums.ContractType
   workMode?: $Enums.WorkMode
   experienceLevel?: $Enums.ExperienceLevel
+  language?: $Enums.OfferLanguage
   salaryMin?: number | null
   salaryMax?: number | null
   salaryCurrency?: string
@@ -519,6 +547,7 @@ export type JobOfferCreateInput = {
   updatedAt?: Date | string
   skills?: Prisma.JobOfferSkillCreateNestedManyWithoutJobOfferInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutJobOfferInput
+  jobSite?: Prisma.JobSiteCreateNestedOneWithoutOffersInput
 }
 
 export type JobOfferUncheckedCreateInput = {
@@ -533,6 +562,7 @@ export type JobOfferUncheckedCreateInput = {
   contractType: $Enums.ContractType
   workMode?: $Enums.WorkMode
   experienceLevel?: $Enums.ExperienceLevel
+  language?: $Enums.OfferLanguage
   salaryMin?: number | null
   salaryMax?: number | null
   salaryCurrency?: string
@@ -546,6 +576,7 @@ export type JobOfferUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  jobSiteId?: string | null
   skills?: Prisma.JobOfferSkillUncheckedCreateNestedManyWithoutJobOfferInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutJobOfferInput
 }
@@ -562,6 +593,7 @@ export type JobOfferUpdateInput = {
   contractType?: Prisma.EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
   workMode?: Prisma.EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
   experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFieldUpdateOperationsInput | $Enums.OfferLanguage
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -577,6 +609,7 @@ export type JobOfferUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   skills?: Prisma.JobOfferSkillUpdateManyWithoutJobOfferNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutJobOfferNestedInput
+  jobSite?: Prisma.JobSiteUpdateOneWithoutOffersNestedInput
 }
 
 export type JobOfferUncheckedUpdateInput = {
@@ -591,6 +624,7 @@ export type JobOfferUncheckedUpdateInput = {
   contractType?: Prisma.EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
   workMode?: Prisma.EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
   experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFieldUpdateOperationsInput | $Enums.OfferLanguage
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -604,6 +638,7 @@ export type JobOfferUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  jobSiteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   skills?: Prisma.JobOfferSkillUncheckedUpdateManyWithoutJobOfferNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutJobOfferNestedInput
 }
@@ -620,6 +655,7 @@ export type JobOfferCreateManyInput = {
   contractType: $Enums.ContractType
   workMode?: $Enums.WorkMode
   experienceLevel?: $Enums.ExperienceLevel
+  language?: $Enums.OfferLanguage
   salaryMin?: number | null
   salaryMax?: number | null
   salaryCurrency?: string
@@ -633,6 +669,7 @@ export type JobOfferCreateManyInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  jobSiteId?: string | null
 }
 
 export type JobOfferUpdateManyMutationInput = {
@@ -647,6 +684,7 @@ export type JobOfferUpdateManyMutationInput = {
   contractType?: Prisma.EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
   workMode?: Prisma.EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
   experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFieldUpdateOperationsInput | $Enums.OfferLanguage
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -674,6 +712,7 @@ export type JobOfferUncheckedUpdateManyInput = {
   contractType?: Prisma.EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
   workMode?: Prisma.EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
   experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFieldUpdateOperationsInput | $Enums.OfferLanguage
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -687,6 +726,7 @@ export type JobOfferUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  jobSiteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type StringNullableListFilter<$PrismaModel = never> = {
@@ -714,6 +754,7 @@ export type JobOfferCountOrderByAggregateInput = {
   contractType?: Prisma.SortOrder
   workMode?: Prisma.SortOrder
   experienceLevel?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   salaryMin?: Prisma.SortOrder
   salaryMax?: Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrder
@@ -727,6 +768,7 @@ export type JobOfferCountOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  jobSiteId?: Prisma.SortOrder
 }
 
 export type JobOfferAvgOrderByAggregateInput = {
@@ -746,6 +788,7 @@ export type JobOfferMaxOrderByAggregateInput = {
   contractType?: Prisma.SortOrder
   workMode?: Prisma.SortOrder
   experienceLevel?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   salaryMin?: Prisma.SortOrder
   salaryMax?: Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrder
@@ -757,6 +800,7 @@ export type JobOfferMaxOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  jobSiteId?: Prisma.SortOrder
 }
 
 export type JobOfferMinOrderByAggregateInput = {
@@ -771,6 +815,7 @@ export type JobOfferMinOrderByAggregateInput = {
   contractType?: Prisma.SortOrder
   workMode?: Prisma.SortOrder
   experienceLevel?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   salaryMin?: Prisma.SortOrder
   salaryMax?: Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrder
@@ -782,6 +827,7 @@ export type JobOfferMinOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  jobSiteId?: Prisma.SortOrder
 }
 
 export type JobOfferSumOrderByAggregateInput = {
@@ -794,6 +840,16 @@ export type JobOfferScalarRelationFilter = {
   isNot?: Prisma.JobOfferWhereInput
 }
 
+export type JobOfferListRelationFilter = {
+  every?: Prisma.JobOfferWhereInput
+  some?: Prisma.JobOfferWhereInput
+  none?: Prisma.JobOfferWhereInput
+}
+
+export type JobOfferOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type JobOfferCreatetagsInput = {
   set: string[]
 }
@@ -804,6 +860,10 @@ export type EnumContractTypeFieldUpdateOperationsInput = {
 
 export type EnumWorkModeFieldUpdateOperationsInput = {
   set?: $Enums.WorkMode
+}
+
+export type EnumOfferLanguageFieldUpdateOperationsInput = {
+  set?: $Enums.OfferLanguage
 }
 
 export type JobOfferUpdatetagsInput = {
@@ -839,6 +899,48 @@ export type JobOfferUpdateOneRequiredWithoutBookmarksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.JobOfferUpdateToOneWithWhereWithoutBookmarksInput, Prisma.JobOfferUpdateWithoutBookmarksInput>, Prisma.JobOfferUncheckedUpdateWithoutBookmarksInput>
 }
 
+export type JobOfferCreateNestedManyWithoutJobSiteInput = {
+  create?: Prisma.XOR<Prisma.JobOfferCreateWithoutJobSiteInput, Prisma.JobOfferUncheckedCreateWithoutJobSiteInput> | Prisma.JobOfferCreateWithoutJobSiteInput[] | Prisma.JobOfferUncheckedCreateWithoutJobSiteInput[]
+  connectOrCreate?: Prisma.JobOfferCreateOrConnectWithoutJobSiteInput | Prisma.JobOfferCreateOrConnectWithoutJobSiteInput[]
+  createMany?: Prisma.JobOfferCreateManyJobSiteInputEnvelope
+  connect?: Prisma.JobOfferWhereUniqueInput | Prisma.JobOfferWhereUniqueInput[]
+}
+
+export type JobOfferUncheckedCreateNestedManyWithoutJobSiteInput = {
+  create?: Prisma.XOR<Prisma.JobOfferCreateWithoutJobSiteInput, Prisma.JobOfferUncheckedCreateWithoutJobSiteInput> | Prisma.JobOfferCreateWithoutJobSiteInput[] | Prisma.JobOfferUncheckedCreateWithoutJobSiteInput[]
+  connectOrCreate?: Prisma.JobOfferCreateOrConnectWithoutJobSiteInput | Prisma.JobOfferCreateOrConnectWithoutJobSiteInput[]
+  createMany?: Prisma.JobOfferCreateManyJobSiteInputEnvelope
+  connect?: Prisma.JobOfferWhereUniqueInput | Prisma.JobOfferWhereUniqueInput[]
+}
+
+export type JobOfferUpdateManyWithoutJobSiteNestedInput = {
+  create?: Prisma.XOR<Prisma.JobOfferCreateWithoutJobSiteInput, Prisma.JobOfferUncheckedCreateWithoutJobSiteInput> | Prisma.JobOfferCreateWithoutJobSiteInput[] | Prisma.JobOfferUncheckedCreateWithoutJobSiteInput[]
+  connectOrCreate?: Prisma.JobOfferCreateOrConnectWithoutJobSiteInput | Prisma.JobOfferCreateOrConnectWithoutJobSiteInput[]
+  upsert?: Prisma.JobOfferUpsertWithWhereUniqueWithoutJobSiteInput | Prisma.JobOfferUpsertWithWhereUniqueWithoutJobSiteInput[]
+  createMany?: Prisma.JobOfferCreateManyJobSiteInputEnvelope
+  set?: Prisma.JobOfferWhereUniqueInput | Prisma.JobOfferWhereUniqueInput[]
+  disconnect?: Prisma.JobOfferWhereUniqueInput | Prisma.JobOfferWhereUniqueInput[]
+  delete?: Prisma.JobOfferWhereUniqueInput | Prisma.JobOfferWhereUniqueInput[]
+  connect?: Prisma.JobOfferWhereUniqueInput | Prisma.JobOfferWhereUniqueInput[]
+  update?: Prisma.JobOfferUpdateWithWhereUniqueWithoutJobSiteInput | Prisma.JobOfferUpdateWithWhereUniqueWithoutJobSiteInput[]
+  updateMany?: Prisma.JobOfferUpdateManyWithWhereWithoutJobSiteInput | Prisma.JobOfferUpdateManyWithWhereWithoutJobSiteInput[]
+  deleteMany?: Prisma.JobOfferScalarWhereInput | Prisma.JobOfferScalarWhereInput[]
+}
+
+export type JobOfferUncheckedUpdateManyWithoutJobSiteNestedInput = {
+  create?: Prisma.XOR<Prisma.JobOfferCreateWithoutJobSiteInput, Prisma.JobOfferUncheckedCreateWithoutJobSiteInput> | Prisma.JobOfferCreateWithoutJobSiteInput[] | Prisma.JobOfferUncheckedCreateWithoutJobSiteInput[]
+  connectOrCreate?: Prisma.JobOfferCreateOrConnectWithoutJobSiteInput | Prisma.JobOfferCreateOrConnectWithoutJobSiteInput[]
+  upsert?: Prisma.JobOfferUpsertWithWhereUniqueWithoutJobSiteInput | Prisma.JobOfferUpsertWithWhereUniqueWithoutJobSiteInput[]
+  createMany?: Prisma.JobOfferCreateManyJobSiteInputEnvelope
+  set?: Prisma.JobOfferWhereUniqueInput | Prisma.JobOfferWhereUniqueInput[]
+  disconnect?: Prisma.JobOfferWhereUniqueInput | Prisma.JobOfferWhereUniqueInput[]
+  delete?: Prisma.JobOfferWhereUniqueInput | Prisma.JobOfferWhereUniqueInput[]
+  connect?: Prisma.JobOfferWhereUniqueInput | Prisma.JobOfferWhereUniqueInput[]
+  update?: Prisma.JobOfferUpdateWithWhereUniqueWithoutJobSiteInput | Prisma.JobOfferUpdateWithWhereUniqueWithoutJobSiteInput[]
+  updateMany?: Prisma.JobOfferUpdateManyWithWhereWithoutJobSiteInput | Prisma.JobOfferUpdateManyWithWhereWithoutJobSiteInput[]
+  deleteMany?: Prisma.JobOfferScalarWhereInput | Prisma.JobOfferScalarWhereInput[]
+}
+
 export type JobOfferCreateWithoutSkillsInput = {
   id?: string
   externalId: string
@@ -851,6 +953,7 @@ export type JobOfferCreateWithoutSkillsInput = {
   contractType: $Enums.ContractType
   workMode?: $Enums.WorkMode
   experienceLevel?: $Enums.ExperienceLevel
+  language?: $Enums.OfferLanguage
   salaryMin?: number | null
   salaryMax?: number | null
   salaryCurrency?: string
@@ -865,6 +968,7 @@ export type JobOfferCreateWithoutSkillsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutJobOfferInput
+  jobSite?: Prisma.JobSiteCreateNestedOneWithoutOffersInput
 }
 
 export type JobOfferUncheckedCreateWithoutSkillsInput = {
@@ -879,6 +983,7 @@ export type JobOfferUncheckedCreateWithoutSkillsInput = {
   contractType: $Enums.ContractType
   workMode?: $Enums.WorkMode
   experienceLevel?: $Enums.ExperienceLevel
+  language?: $Enums.OfferLanguage
   salaryMin?: number | null
   salaryMax?: number | null
   salaryCurrency?: string
@@ -892,6 +997,7 @@ export type JobOfferUncheckedCreateWithoutSkillsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  jobSiteId?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutJobOfferInput
 }
 
@@ -923,6 +1029,7 @@ export type JobOfferUpdateWithoutSkillsInput = {
   contractType?: Prisma.EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
   workMode?: Prisma.EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
   experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFieldUpdateOperationsInput | $Enums.OfferLanguage
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -937,6 +1044,7 @@ export type JobOfferUpdateWithoutSkillsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bookmarks?: Prisma.BookmarkUpdateManyWithoutJobOfferNestedInput
+  jobSite?: Prisma.JobSiteUpdateOneWithoutOffersNestedInput
 }
 
 export type JobOfferUncheckedUpdateWithoutSkillsInput = {
@@ -951,6 +1059,7 @@ export type JobOfferUncheckedUpdateWithoutSkillsInput = {
   contractType?: Prisma.EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
   workMode?: Prisma.EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
   experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFieldUpdateOperationsInput | $Enums.OfferLanguage
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -964,6 +1073,7 @@ export type JobOfferUncheckedUpdateWithoutSkillsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  jobSiteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutJobOfferNestedInput
 }
 
@@ -979,6 +1089,7 @@ export type JobOfferCreateWithoutBookmarksInput = {
   contractType: $Enums.ContractType
   workMode?: $Enums.WorkMode
   experienceLevel?: $Enums.ExperienceLevel
+  language?: $Enums.OfferLanguage
   salaryMin?: number | null
   salaryMax?: number | null
   salaryCurrency?: string
@@ -993,6 +1104,7 @@ export type JobOfferCreateWithoutBookmarksInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   skills?: Prisma.JobOfferSkillCreateNestedManyWithoutJobOfferInput
+  jobSite?: Prisma.JobSiteCreateNestedOneWithoutOffersInput
 }
 
 export type JobOfferUncheckedCreateWithoutBookmarksInput = {
@@ -1007,6 +1119,7 @@ export type JobOfferUncheckedCreateWithoutBookmarksInput = {
   contractType: $Enums.ContractType
   workMode?: $Enums.WorkMode
   experienceLevel?: $Enums.ExperienceLevel
+  language?: $Enums.OfferLanguage
   salaryMin?: number | null
   salaryMax?: number | null
   salaryCurrency?: string
@@ -1020,6 +1133,7 @@ export type JobOfferUncheckedCreateWithoutBookmarksInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  jobSiteId?: string | null
   skills?: Prisma.JobOfferSkillUncheckedCreateNestedManyWithoutJobOfferInput
 }
 
@@ -1051,6 +1165,7 @@ export type JobOfferUpdateWithoutBookmarksInput = {
   contractType?: Prisma.EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
   workMode?: Prisma.EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
   experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFieldUpdateOperationsInput | $Enums.OfferLanguage
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1065,6 +1180,7 @@ export type JobOfferUpdateWithoutBookmarksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   skills?: Prisma.JobOfferSkillUpdateManyWithoutJobOfferNestedInput
+  jobSite?: Prisma.JobSiteUpdateOneWithoutOffersNestedInput
 }
 
 export type JobOfferUncheckedUpdateWithoutBookmarksInput = {
@@ -1079,6 +1195,213 @@ export type JobOfferUncheckedUpdateWithoutBookmarksInput = {
   contractType?: Prisma.EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
   workMode?: Prisma.EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
   experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFieldUpdateOperationsInput | $Enums.OfferLanguage
+  salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  salaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  applyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.JobOfferUpdatetagsInput | string[]
+  publishedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rawPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  syncedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  jobSiteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  skills?: Prisma.JobOfferSkillUncheckedUpdateManyWithoutJobOfferNestedInput
+}
+
+export type JobOfferCreateWithoutJobSiteInput = {
+  id?: string
+  externalId: string
+  source: string
+  title: string
+  company: string
+  description: string
+  city: string
+  country?: string
+  contractType: $Enums.ContractType
+  workMode?: $Enums.WorkMode
+  experienceLevel?: $Enums.ExperienceLevel
+  language?: $Enums.OfferLanguage
+  salaryMin?: number | null
+  salaryMax?: number | null
+  salaryCurrency?: string
+  url: string
+  applyUrl?: string | null
+  logoUrl?: string | null
+  tags?: Prisma.JobOfferCreatetagsInput | string[]
+  publishedAt: Date | string
+  rawPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  syncedAt?: Date | string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  skills?: Prisma.JobOfferSkillCreateNestedManyWithoutJobOfferInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutJobOfferInput
+}
+
+export type JobOfferUncheckedCreateWithoutJobSiteInput = {
+  id?: string
+  externalId: string
+  source: string
+  title: string
+  company: string
+  description: string
+  city: string
+  country?: string
+  contractType: $Enums.ContractType
+  workMode?: $Enums.WorkMode
+  experienceLevel?: $Enums.ExperienceLevel
+  language?: $Enums.OfferLanguage
+  salaryMin?: number | null
+  salaryMax?: number | null
+  salaryCurrency?: string
+  url: string
+  applyUrl?: string | null
+  logoUrl?: string | null
+  tags?: Prisma.JobOfferCreatetagsInput | string[]
+  publishedAt: Date | string
+  rawPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  syncedAt?: Date | string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  skills?: Prisma.JobOfferSkillUncheckedCreateNestedManyWithoutJobOfferInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutJobOfferInput
+}
+
+export type JobOfferCreateOrConnectWithoutJobSiteInput = {
+  where: Prisma.JobOfferWhereUniqueInput
+  create: Prisma.XOR<Prisma.JobOfferCreateWithoutJobSiteInput, Prisma.JobOfferUncheckedCreateWithoutJobSiteInput>
+}
+
+export type JobOfferCreateManyJobSiteInputEnvelope = {
+  data: Prisma.JobOfferCreateManyJobSiteInput | Prisma.JobOfferCreateManyJobSiteInput[]
+  skipDuplicates?: boolean
+}
+
+export type JobOfferUpsertWithWhereUniqueWithoutJobSiteInput = {
+  where: Prisma.JobOfferWhereUniqueInput
+  update: Prisma.XOR<Prisma.JobOfferUpdateWithoutJobSiteInput, Prisma.JobOfferUncheckedUpdateWithoutJobSiteInput>
+  create: Prisma.XOR<Prisma.JobOfferCreateWithoutJobSiteInput, Prisma.JobOfferUncheckedCreateWithoutJobSiteInput>
+}
+
+export type JobOfferUpdateWithWhereUniqueWithoutJobSiteInput = {
+  where: Prisma.JobOfferWhereUniqueInput
+  data: Prisma.XOR<Prisma.JobOfferUpdateWithoutJobSiteInput, Prisma.JobOfferUncheckedUpdateWithoutJobSiteInput>
+}
+
+export type JobOfferUpdateManyWithWhereWithoutJobSiteInput = {
+  where: Prisma.JobOfferScalarWhereInput
+  data: Prisma.XOR<Prisma.JobOfferUpdateManyMutationInput, Prisma.JobOfferUncheckedUpdateManyWithoutJobSiteInput>
+}
+
+export type JobOfferScalarWhereInput = {
+  AND?: Prisma.JobOfferScalarWhereInput | Prisma.JobOfferScalarWhereInput[]
+  OR?: Prisma.JobOfferScalarWhereInput[]
+  NOT?: Prisma.JobOfferScalarWhereInput | Prisma.JobOfferScalarWhereInput[]
+  id?: Prisma.UuidFilter<"JobOffer"> | string
+  externalId?: Prisma.StringFilter<"JobOffer"> | string
+  source?: Prisma.StringFilter<"JobOffer"> | string
+  title?: Prisma.StringFilter<"JobOffer"> | string
+  company?: Prisma.StringFilter<"JobOffer"> | string
+  description?: Prisma.StringFilter<"JobOffer"> | string
+  city?: Prisma.StringFilter<"JobOffer"> | string
+  country?: Prisma.StringFilter<"JobOffer"> | string
+  contractType?: Prisma.EnumContractTypeFilter<"JobOffer"> | $Enums.ContractType
+  workMode?: Prisma.EnumWorkModeFilter<"JobOffer"> | $Enums.WorkMode
+  experienceLevel?: Prisma.EnumExperienceLevelFilter<"JobOffer"> | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFilter<"JobOffer"> | $Enums.OfferLanguage
+  salaryMin?: Prisma.IntNullableFilter<"JobOffer"> | number | null
+  salaryMax?: Prisma.IntNullableFilter<"JobOffer"> | number | null
+  salaryCurrency?: Prisma.StringFilter<"JobOffer"> | string
+  url?: Prisma.StringFilter<"JobOffer"> | string
+  applyUrl?: Prisma.StringNullableFilter<"JobOffer"> | string | null
+  logoUrl?: Prisma.StringNullableFilter<"JobOffer"> | string | null
+  tags?: Prisma.StringNullableListFilter<"JobOffer">
+  publishedAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
+  rawPayload?: Prisma.JsonNullableFilter<"JobOffer">
+  syncedAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
+  isActive?: Prisma.BoolFilter<"JobOffer"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"JobOffer"> | Date | string
+  jobSiteId?: Prisma.UuidNullableFilter<"JobOffer"> | string | null
+}
+
+export type JobOfferCreateManyJobSiteInput = {
+  id?: string
+  externalId: string
+  source: string
+  title: string
+  company: string
+  description: string
+  city: string
+  country?: string
+  contractType: $Enums.ContractType
+  workMode?: $Enums.WorkMode
+  experienceLevel?: $Enums.ExperienceLevel
+  language?: $Enums.OfferLanguage
+  salaryMin?: number | null
+  salaryMax?: number | null
+  salaryCurrency?: string
+  url: string
+  applyUrl?: string | null
+  logoUrl?: string | null
+  tags?: Prisma.JobOfferCreatetagsInput | string[]
+  publishedAt: Date | string
+  rawPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  syncedAt?: Date | string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type JobOfferUpdateWithoutJobSiteInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  company?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  contractType?: Prisma.EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+  workMode?: Prisma.EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+  experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFieldUpdateOperationsInput | $Enums.OfferLanguage
+  salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  salaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  applyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.JobOfferUpdatetagsInput | string[]
+  publishedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rawPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  syncedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  skills?: Prisma.JobOfferSkillUpdateManyWithoutJobOfferNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutJobOfferNestedInput
+}
+
+export type JobOfferUncheckedUpdateWithoutJobSiteInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  company?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  contractType?: Prisma.EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+  workMode?: Prisma.EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+  experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFieldUpdateOperationsInput | $Enums.OfferLanguage
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1093,6 +1416,35 @@ export type JobOfferUncheckedUpdateWithoutBookmarksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   skills?: Prisma.JobOfferSkillUncheckedUpdateManyWithoutJobOfferNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutJobOfferNestedInput
+}
+
+export type JobOfferUncheckedUpdateManyWithoutJobSiteInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  company?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  contractType?: Prisma.EnumContractTypeFieldUpdateOperationsInput | $Enums.ContractType
+  workMode?: Prisma.EnumWorkModeFieldUpdateOperationsInput | $Enums.WorkMode
+  experienceLevel?: Prisma.EnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel
+  language?: Prisma.EnumOfferLanguageFieldUpdateOperationsInput | $Enums.OfferLanguage
+  salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  salaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  applyUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tags?: Prisma.JobOfferUpdatetagsInput | string[]
+  publishedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rawPayload?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  syncedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -1147,6 +1499,7 @@ export type JobOfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   contractType?: boolean
   workMode?: boolean
   experienceLevel?: boolean
+  language?: boolean
   salaryMin?: boolean
   salaryMax?: boolean
   salaryCurrency?: boolean
@@ -1160,8 +1513,10 @@ export type JobOfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  jobSiteId?: boolean
   skills?: boolean | Prisma.JobOffer$skillsArgs<ExtArgs>
   bookmarks?: boolean | Prisma.JobOffer$bookmarksArgs<ExtArgs>
+  jobSite?: boolean | Prisma.JobOffer$jobSiteArgs<ExtArgs>
   _count?: boolean | Prisma.JobOfferCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["jobOffer"]>
 
@@ -1177,6 +1532,7 @@ export type JobOfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   contractType?: boolean
   workMode?: boolean
   experienceLevel?: boolean
+  language?: boolean
   salaryMin?: boolean
   salaryMax?: boolean
   salaryCurrency?: boolean
@@ -1190,6 +1546,8 @@ export type JobOfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  jobSiteId?: boolean
+  jobSite?: boolean | Prisma.JobOffer$jobSiteArgs<ExtArgs>
 }, ExtArgs["result"]["jobOffer"]>
 
 export type JobOfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1204,6 +1562,7 @@ export type JobOfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   contractType?: boolean
   workMode?: boolean
   experienceLevel?: boolean
+  language?: boolean
   salaryMin?: boolean
   salaryMax?: boolean
   salaryCurrency?: boolean
@@ -1217,6 +1576,8 @@ export type JobOfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  jobSiteId?: boolean
+  jobSite?: boolean | Prisma.JobOffer$jobSiteArgs<ExtArgs>
 }, ExtArgs["result"]["jobOffer"]>
 
 export type JobOfferSelectScalar = {
@@ -1231,6 +1592,7 @@ export type JobOfferSelectScalar = {
   contractType?: boolean
   workMode?: boolean
   experienceLevel?: boolean
+  language?: boolean
   salaryMin?: boolean
   salaryMax?: boolean
   salaryCurrency?: boolean
@@ -1244,22 +1606,29 @@ export type JobOfferSelectScalar = {
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  jobSiteId?: boolean
 }
 
-export type JobOfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "externalId" | "source" | "title" | "company" | "description" | "city" | "country" | "contractType" | "workMode" | "experienceLevel" | "salaryMin" | "salaryMax" | "salaryCurrency" | "url" | "applyUrl" | "logoUrl" | "tags" | "publishedAt" | "rawPayload" | "syncedAt" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["jobOffer"]>
+export type JobOfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "externalId" | "source" | "title" | "company" | "description" | "city" | "country" | "contractType" | "workMode" | "experienceLevel" | "language" | "salaryMin" | "salaryMax" | "salaryCurrency" | "url" | "applyUrl" | "logoUrl" | "tags" | "publishedAt" | "rawPayload" | "syncedAt" | "isActive" | "createdAt" | "updatedAt" | "jobSiteId", ExtArgs["result"]["jobOffer"]>
 export type JobOfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   skills?: boolean | Prisma.JobOffer$skillsArgs<ExtArgs>
   bookmarks?: boolean | Prisma.JobOffer$bookmarksArgs<ExtArgs>
+  jobSite?: boolean | Prisma.JobOffer$jobSiteArgs<ExtArgs>
   _count?: boolean | Prisma.JobOfferCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type JobOfferIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type JobOfferIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type JobOfferIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  jobSite?: boolean | Prisma.JobOffer$jobSiteArgs<ExtArgs>
+}
+export type JobOfferIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  jobSite?: boolean | Prisma.JobOffer$jobSiteArgs<ExtArgs>
+}
 
 export type $JobOfferPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "JobOffer"
   objects: {
     skills: Prisma.$JobOfferSkillPayload<ExtArgs>[]
     bookmarks: Prisma.$BookmarkPayload<ExtArgs>[]
+    jobSite: Prisma.$JobSitePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1276,6 +1645,10 @@ export type $JobOfferPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     contractType: $Enums.ContractType
     workMode: $Enums.WorkMode
     experienceLevel: $Enums.ExperienceLevel
+    /**
+     * Langue de rédaction : permet de filtrer les offres illisibles.
+     */
+    language: $Enums.OfferLanguage
     salaryMin: number | null
     salaryMax: number | null
     salaryCurrency: string
@@ -1295,6 +1668,10 @@ export type $JobOfferPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     isActive: boolean
     createdAt: Date
     updatedAt: Date
+    /**
+     * Site d'emploi d'où provient l'offre (facultatif : agrégateurs génériques).
+     */
+    jobSiteId: string | null
   }, ExtArgs["result"]["jobOffer"]>
   composites: {}
 }
@@ -1691,6 +2068,7 @@ export interface Prisma__JobOfferClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   skills<T extends Prisma.JobOffer$skillsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JobOffer$skillsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobOfferSkillPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bookmarks<T extends Prisma.JobOffer$bookmarksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JobOffer$bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  jobSite<T extends Prisma.JobOffer$jobSiteArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JobOffer$jobSiteArgs<ExtArgs>>): Prisma.Prisma__JobSiteClient<runtime.Types.Result.GetResult<Prisma.$JobSitePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1731,6 +2109,7 @@ export interface JobOfferFieldRefs {
   readonly contractType: Prisma.FieldRef<"JobOffer", 'ContractType'>
   readonly workMode: Prisma.FieldRef<"JobOffer", 'WorkMode'>
   readonly experienceLevel: Prisma.FieldRef<"JobOffer", 'ExperienceLevel'>
+  readonly language: Prisma.FieldRef<"JobOffer", 'OfferLanguage'>
   readonly salaryMin: Prisma.FieldRef<"JobOffer", 'Int'>
   readonly salaryMax: Prisma.FieldRef<"JobOffer", 'Int'>
   readonly salaryCurrency: Prisma.FieldRef<"JobOffer", 'String'>
@@ -1744,6 +2123,7 @@ export interface JobOfferFieldRefs {
   readonly isActive: Prisma.FieldRef<"JobOffer", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"JobOffer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"JobOffer", 'DateTime'>
+  readonly jobSiteId: Prisma.FieldRef<"JobOffer", 'String'>
 }
     
 
@@ -1998,6 +2378,10 @@ export type JobOfferCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    */
   data: Prisma.JobOfferCreateManyInput | Prisma.JobOfferCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JobOfferIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2068,6 +2452,10 @@ export type JobOfferUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many JobOffers to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JobOfferIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2182,6 +2570,25 @@ export type JobOffer$bookmarksArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.BookmarkScalarFieldEnum | Prisma.BookmarkScalarFieldEnum[]
+}
+
+/**
+ * JobOffer.jobSite
+ */
+export type JobOffer$jobSiteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JobSite
+   */
+  select?: Prisma.JobSiteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the JobSite
+   */
+  omit?: Prisma.JobSiteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JobSiteInclude<ExtArgs> | null
+  where?: Prisma.JobSiteWhereInput
 }
 
 /**

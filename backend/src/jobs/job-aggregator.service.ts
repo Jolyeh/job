@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { detectLanguage } from './scoring/skill-extractor';
 import { JOB_PROVIDERS } from './providers/tokens';
 import {
   JobProvider,
@@ -100,6 +101,7 @@ export class JobAggregatorService {
           contractType: offer.contractType,
           workMode: offer.workMode,
           experienceLevel: offer.experienceLevel,
+          language: offer.language ?? detectLanguage(`${offer.title} ${offer.description}`),
           salaryMin: offer.salaryMin ?? null,
           salaryMax: offer.salaryMax ?? null,
           salaryCurrency: offer.salaryCurrency ?? 'EUR',

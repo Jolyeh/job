@@ -36,6 +36,8 @@ export interface ScoringProfile {
   radiusKm: number;
   contractTypes: string[];
   workModes: string[];
+  /** Langues d'offres acceptées (vide = pas de filtre). */
+  languages?: string[];
   salaryMin?: number | null;
   salaryCurrency?: string | null;
   skills: ScoringSkill[];
@@ -49,6 +51,8 @@ export interface ScoringOffer {
   contractType: string;
   workMode: string;
   experienceLevel: 'JUNIOR' | 'INTERMEDIATE' | 'SENIOR' | 'LEAD';
+  /** Langue de l'offre (FR/EN) : purement informatif pour le scoring. */
+  language?: string;
   salaryMin?: number | null;
   salaryMax?: number | null;
   salaryCurrency?: string | null;

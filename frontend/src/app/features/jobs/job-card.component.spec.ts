@@ -15,6 +15,7 @@ const offer: JobOffer = {
   contractType: 'CDI',
   workMode: 'HYBRID',
   experienceLevel: 'INTERMEDIATE',
+  language: 'FR',
   salaryMin: 48000,
   salaryMax: 58000,
   salaryCurrency: 'EUR',
@@ -40,6 +41,10 @@ const offer: JobOffer = {
 };
 
 describe('JobCardComponent', () => {
+  // Le service i18n résout la langue au démarrage (navigateur « en-US » sous
+  // jsdom) : on épingle le français pour tester le rendu de référence.
+  beforeEach(() => localStorage.setItem('jobradar.lang', 'fr'));
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [JobCardComponent],

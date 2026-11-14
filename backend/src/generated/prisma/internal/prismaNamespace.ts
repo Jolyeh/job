@@ -405,6 +405,8 @@ export const ModelName = {
   JobOfferSkill: 'JobOfferSkill',
   Bookmark: 'Bookmark',
   ApplicationEvent: 'ApplicationEvent',
+  JobSite: 'JobSite',
+  UserJobSite: 'UserJobSite',
   SearchRun: 'SearchRun'
 } as const
 
@@ -421,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "profile" | "skill" | "profileSkill" | "jobOffer" | "jobOfferSkill" | "bookmark" | "applicationEvent" | "searchRun"
+    modelProps: "user" | "profile" | "skill" | "profileSkill" | "jobOffer" | "jobOfferSkill" | "bookmark" | "applicationEvent" | "jobSite" | "userJobSite" | "searchRun"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1017,6 +1019,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    JobSite: {
+      payload: Prisma.$JobSitePayload<ExtArgs>
+      fields: Prisma.JobSiteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.JobSiteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobSitePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.JobSiteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobSitePayload>
+        }
+        findFirst: {
+          args: Prisma.JobSiteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobSitePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.JobSiteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobSitePayload>
+        }
+        findMany: {
+          args: Prisma.JobSiteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobSitePayload>[]
+        }
+        create: {
+          args: Prisma.JobSiteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobSitePayload>
+        }
+        createMany: {
+          args: Prisma.JobSiteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.JobSiteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobSitePayload>[]
+        }
+        delete: {
+          args: Prisma.JobSiteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobSitePayload>
+        }
+        update: {
+          args: Prisma.JobSiteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobSitePayload>
+        }
+        deleteMany: {
+          args: Prisma.JobSiteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.JobSiteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.JobSiteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobSitePayload>[]
+        }
+        upsert: {
+          args: Prisma.JobSiteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobSitePayload>
+        }
+        aggregate: {
+          args: Prisma.JobSiteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateJobSite>
+        }
+        groupBy: {
+          args: Prisma.JobSiteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobSiteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.JobSiteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobSiteCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserJobSite: {
+      payload: Prisma.$UserJobSitePayload<ExtArgs>
+      fields: Prisma.UserJobSiteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserJobSiteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserJobSitePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserJobSiteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserJobSitePayload>
+        }
+        findFirst: {
+          args: Prisma.UserJobSiteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserJobSitePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserJobSiteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserJobSitePayload>
+        }
+        findMany: {
+          args: Prisma.UserJobSiteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserJobSitePayload>[]
+        }
+        create: {
+          args: Prisma.UserJobSiteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserJobSitePayload>
+        }
+        createMany: {
+          args: Prisma.UserJobSiteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserJobSiteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserJobSitePayload>[]
+        }
+        delete: {
+          args: Prisma.UserJobSiteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserJobSitePayload>
+        }
+        update: {
+          args: Prisma.UserJobSiteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserJobSitePayload>
+        }
+        deleteMany: {
+          args: Prisma.UserJobSiteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserJobSiteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserJobSiteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserJobSitePayload>[]
+        }
+        upsert: {
+          args: Prisma.UserJobSiteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserJobSitePayload>
+        }
+        aggregate: {
+          args: Prisma.UserJobSiteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserJobSite>
+        }
+        groupBy: {
+          args: Prisma.UserJobSiteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserJobSiteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserJobSiteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserJobSiteCountAggregateOutputType> | number
+        }
+      }
+    }
     SearchRun: {
       payload: Prisma.$SearchRunPayload<ExtArgs>
       fields: Prisma.SearchRunFieldRefs
@@ -1155,6 +1305,7 @@ export const ProfileScalarFieldEnum = {
   radiusKm: 'radiusKm',
   contractTypes: 'contractTypes',
   workModes: 'workModes',
+  languages: 'languages',
   salaryMin: 'salaryMin',
   salaryCurrency: 'salaryCurrency',
   salaryPeriod: 'salaryPeriod',
@@ -1201,6 +1352,7 @@ export const JobOfferScalarFieldEnum = {
   contractType: 'contractType',
   workMode: 'workMode',
   experienceLevel: 'experienceLevel',
+  language: 'language',
   salaryMin: 'salaryMin',
   salaryMax: 'salaryMax',
   salaryCurrency: 'salaryCurrency',
@@ -1213,7 +1365,8 @@ export const JobOfferScalarFieldEnum = {
   syncedAt: 'syncedAt',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  jobSiteId: 'jobSiteId'
 } as const
 
 export type JobOfferScalarFieldEnum = (typeof JobOfferScalarFieldEnum)[keyof typeof JobOfferScalarFieldEnum]
@@ -1255,6 +1408,41 @@ export const ApplicationEventScalarFieldEnum = {
 } as const
 
 export type ApplicationEventScalarFieldEnum = (typeof ApplicationEventScalarFieldEnum)[keyof typeof ApplicationEventScalarFieldEnum]
+
+
+export const JobSiteScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  url: 'url',
+  kind: 'kind',
+  country: 'country',
+  language: 'language',
+  description: 'description',
+  logoUrl: 'logoUrl',
+  isDefault: 'isDefault',
+  isActive: 'isActive',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type JobSiteScalarFieldEnum = (typeof JobSiteScalarFieldEnum)[keyof typeof JobSiteScalarFieldEnum]
+
+
+export const UserJobSiteScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  jobSiteId: 'jobSiteId',
+  customName: 'customName',
+  accountLabel: 'accountLabel',
+  notes: 'notes',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserJobSiteScalarFieldEnum = (typeof UserJobSiteScalarFieldEnum)[keyof typeof UserJobSiteScalarFieldEnum]
 
 
 export const SearchRunScalarFieldEnum = {
@@ -1425,6 +1613,20 @@ export type EnumWorkModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'OfferLanguage[]'
+ */
+export type ListEnumOfferLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OfferLanguage[]'>
+    
+
+
+/**
+ * Reference to a field of type 'OfferLanguage'
+ */
+export type EnumOfferLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OfferLanguage'>
+    
+
+
+/**
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -1456,6 +1658,20 @@ export type EnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType
  * Reference to a field of type 'ApplicationStatus[]'
  */
 export type ListEnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'JobSiteKind'
+ */
+export type EnumJobSiteKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobSiteKind'>
+    
+
+
+/**
+ * Reference to a field of type 'JobSiteKind[]'
+ */
+export type ListEnumJobSiteKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JobSiteKind[]'>
     
 
 
@@ -1631,6 +1847,8 @@ export type GlobalOmitConfig = {
   jobOfferSkill?: Prisma.JobOfferSkillOmit
   bookmark?: Prisma.BookmarkOmit
   applicationEvent?: Prisma.ApplicationEventOmit
+  jobSite?: Prisma.JobSiteOmit
+  userJobSite?: Prisma.UserJobSiteOmit
   searchRun?: Prisma.SearchRunOmit
 }
 

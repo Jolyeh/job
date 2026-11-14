@@ -87,6 +87,7 @@ export type ProfileCountAggregateOutputType = {
   radiusKm: number
   contractTypes: number
   workModes: number
+  languages: number
   salaryMin: number
   salaryCurrency: number
   salaryPeriod: number
@@ -160,6 +161,7 @@ export type ProfileCountAggregateInputType = {
   radiusKm?: true
   contractTypes?: true
   workModes?: true
+  languages?: true
   salaryMin?: true
   salaryCurrency?: true
   salaryPeriod?: true
@@ -268,6 +270,7 @@ export type ProfileGroupByOutputType = {
   radiusKm: number
   contractTypes: $Enums.ContractType[]
   workModes: $Enums.WorkMode[]
+  languages: $Enums.OfferLanguage[]
   salaryMin: number | null
   salaryCurrency: string
   salaryPeriod: string
@@ -312,6 +315,7 @@ export type ProfileWhereInput = {
   radiusKm?: Prisma.IntFilter<"Profile"> | number
   contractTypes?: Prisma.EnumContractTypeNullableListFilter<"Profile">
   workModes?: Prisma.EnumWorkModeNullableListFilter<"Profile">
+  languages?: Prisma.EnumOfferLanguageNullableListFilter<"Profile">
   salaryMin?: Prisma.IntNullableFilter<"Profile"> | number | null
   salaryCurrency?: Prisma.StringFilter<"Profile"> | string
   salaryPeriod?: Prisma.StringFilter<"Profile"> | string
@@ -335,6 +339,7 @@ export type ProfileOrderByWithRelationInput = {
   radiusKm?: Prisma.SortOrder
   contractTypes?: Prisma.SortOrder
   workModes?: Prisma.SortOrder
+  languages?: Prisma.SortOrder
   salaryMin?: Prisma.SortOrderInput | Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrder
   salaryPeriod?: Prisma.SortOrder
@@ -361,6 +366,7 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   radiusKm?: Prisma.IntFilter<"Profile"> | number
   contractTypes?: Prisma.EnumContractTypeNullableListFilter<"Profile">
   workModes?: Prisma.EnumWorkModeNullableListFilter<"Profile">
+  languages?: Prisma.EnumOfferLanguageNullableListFilter<"Profile">
   salaryMin?: Prisma.IntNullableFilter<"Profile"> | number | null
   salaryCurrency?: Prisma.StringFilter<"Profile"> | string
   salaryPeriod?: Prisma.StringFilter<"Profile"> | string
@@ -384,6 +390,7 @@ export type ProfileOrderByWithAggregationInput = {
   radiusKm?: Prisma.SortOrder
   contractTypes?: Prisma.SortOrder
   workModes?: Prisma.SortOrder
+  languages?: Prisma.SortOrder
   salaryMin?: Prisma.SortOrderInput | Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrder
   salaryPeriod?: Prisma.SortOrder
@@ -413,6 +420,7 @@ export type ProfileScalarWhereWithAggregatesInput = {
   radiusKm?: Prisma.IntWithAggregatesFilter<"Profile"> | number
   contractTypes?: Prisma.EnumContractTypeNullableListFilter<"Profile">
   workModes?: Prisma.EnumWorkModeNullableListFilter<"Profile">
+  languages?: Prisma.EnumOfferLanguageNullableListFilter<"Profile">
   salaryMin?: Prisma.IntNullableWithAggregatesFilter<"Profile"> | number | null
   salaryCurrency?: Prisma.StringWithAggregatesFilter<"Profile"> | string
   salaryPeriod?: Prisma.StringWithAggregatesFilter<"Profile"> | string
@@ -433,6 +441,7 @@ export type ProfileCreateInput = {
   radiusKm?: number
   contractTypes?: Prisma.ProfileCreatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileCreateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileCreatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: number | null
   salaryCurrency?: string
   salaryPeriod?: string
@@ -456,6 +465,7 @@ export type ProfileUncheckedCreateInput = {
   radiusKm?: number
   contractTypes?: Prisma.ProfileCreatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileCreateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileCreatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: number | null
   salaryCurrency?: string
   salaryPeriod?: string
@@ -477,6 +487,7 @@ export type ProfileUpdateInput = {
   radiusKm?: Prisma.IntFieldUpdateOperationsInput | number
   contractTypes?: Prisma.ProfileUpdatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileUpdateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileUpdatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   salaryPeriod?: Prisma.StringFieldUpdateOperationsInput | string
@@ -500,6 +511,7 @@ export type ProfileUncheckedUpdateInput = {
   radiusKm?: Prisma.IntFieldUpdateOperationsInput | number
   contractTypes?: Prisma.ProfileUpdatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileUpdateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileUpdatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   salaryPeriod?: Prisma.StringFieldUpdateOperationsInput | string
@@ -522,6 +534,7 @@ export type ProfileCreateManyInput = {
   radiusKm?: number
   contractTypes?: Prisma.ProfileCreatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileCreateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileCreatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: number | null
   salaryCurrency?: string
   salaryPeriod?: string
@@ -542,6 +555,7 @@ export type ProfileUpdateManyMutationInput = {
   radiusKm?: Prisma.IntFieldUpdateOperationsInput | number
   contractTypes?: Prisma.ProfileUpdatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileUpdateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileUpdatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   salaryPeriod?: Prisma.StringFieldUpdateOperationsInput | string
@@ -563,6 +577,7 @@ export type ProfileUncheckedUpdateManyInput = {
   radiusKm?: Prisma.IntFieldUpdateOperationsInput | number
   contractTypes?: Prisma.ProfileUpdatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileUpdateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileUpdatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   salaryPeriod?: Prisma.StringFieldUpdateOperationsInput | string
@@ -594,6 +609,14 @@ export type EnumWorkModeNullableListFilter<$PrismaModel = never> = {
   isEmpty?: boolean
 }
 
+export type EnumOfferLanguageNullableListFilter<$PrismaModel = never> = {
+  equals?: $Enums.OfferLanguage[] | Prisma.ListEnumOfferLanguageFieldRefInput<$PrismaModel> | null
+  has?: $Enums.OfferLanguage | Prisma.EnumOfferLanguageFieldRefInput<$PrismaModel> | null
+  hasEvery?: $Enums.OfferLanguage[] | Prisma.ListEnumOfferLanguageFieldRefInput<$PrismaModel>
+  hasSome?: $Enums.OfferLanguage[] | Prisma.ListEnumOfferLanguageFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type ProfileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -605,6 +628,7 @@ export type ProfileCountOrderByAggregateInput = {
   radiusKm?: Prisma.SortOrder
   contractTypes?: Prisma.SortOrder
   workModes?: Prisma.SortOrder
+  languages?: Prisma.SortOrder
   salaryMin?: Prisma.SortOrder
   salaryCurrency?: Prisma.SortOrder
   salaryPeriod?: Prisma.SortOrder
@@ -710,6 +734,10 @@ export type ProfileCreateworkModesInput = {
   set: $Enums.WorkMode[]
 }
 
+export type ProfileCreatelanguagesInput = {
+  set: $Enums.OfferLanguage[]
+}
+
 export type EnumExperienceLevelFieldUpdateOperationsInput = {
   set?: $Enums.ExperienceLevel
 }
@@ -722,6 +750,11 @@ export type ProfileUpdatecontractTypesInput = {
 export type ProfileUpdateworkModesInput = {
   set?: $Enums.WorkMode[]
   push?: $Enums.WorkMode | $Enums.WorkMode[]
+}
+
+export type ProfileUpdatelanguagesInput = {
+  set?: $Enums.OfferLanguage[]
+  push?: $Enums.OfferLanguage | $Enums.OfferLanguage[]
 }
 
 export type NullableIntFieldUpdateOperationsInput = {
@@ -768,6 +801,7 @@ export type ProfileCreateWithoutUserInput = {
   radiusKm?: number
   contractTypes?: Prisma.ProfileCreatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileCreateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileCreatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: number | null
   salaryCurrency?: string
   salaryPeriod?: string
@@ -789,6 +823,7 @@ export type ProfileUncheckedCreateWithoutUserInput = {
   radiusKm?: number
   contractTypes?: Prisma.ProfileCreatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileCreateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileCreatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: number | null
   salaryCurrency?: string
   salaryPeriod?: string
@@ -826,6 +861,7 @@ export type ProfileUpdateWithoutUserInput = {
   radiusKm?: Prisma.IntFieldUpdateOperationsInput | number
   contractTypes?: Prisma.ProfileUpdatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileUpdateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileUpdatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   salaryPeriod?: Prisma.StringFieldUpdateOperationsInput | string
@@ -847,6 +883,7 @@ export type ProfileUncheckedUpdateWithoutUserInput = {
   radiusKm?: Prisma.IntFieldUpdateOperationsInput | number
   contractTypes?: Prisma.ProfileUpdatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileUpdateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileUpdatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   salaryPeriod?: Prisma.StringFieldUpdateOperationsInput | string
@@ -868,6 +905,7 @@ export type ProfileCreateWithoutSkillsInput = {
   radiusKm?: number
   contractTypes?: Prisma.ProfileCreatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileCreateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileCreatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: number | null
   salaryCurrency?: string
   salaryPeriod?: string
@@ -890,6 +928,7 @@ export type ProfileUncheckedCreateWithoutSkillsInput = {
   radiusKm?: number
   contractTypes?: Prisma.ProfileCreatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileCreateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileCreatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: number | null
   salaryCurrency?: string
   salaryPeriod?: string
@@ -926,6 +965,7 @@ export type ProfileUpdateWithoutSkillsInput = {
   radiusKm?: Prisma.IntFieldUpdateOperationsInput | number
   contractTypes?: Prisma.ProfileUpdatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileUpdateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileUpdatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   salaryPeriod?: Prisma.StringFieldUpdateOperationsInput | string
@@ -948,6 +988,7 @@ export type ProfileUncheckedUpdateWithoutSkillsInput = {
   radiusKm?: Prisma.IntFieldUpdateOperationsInput | number
   contractTypes?: Prisma.ProfileUpdatecontractTypesInput | $Enums.ContractType[]
   workModes?: Prisma.ProfileUpdateworkModesInput | $Enums.WorkMode[]
+  languages?: Prisma.ProfileUpdatelanguagesInput | $Enums.OfferLanguage[]
   salaryMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   salaryCurrency?: Prisma.StringFieldUpdateOperationsInput | string
   salaryPeriod?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1000,6 +1041,7 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   radiusKm?: boolean
   contractTypes?: boolean
   workModes?: boolean
+  languages?: boolean
   salaryMin?: boolean
   salaryCurrency?: boolean
   salaryPeriod?: boolean
@@ -1024,6 +1066,7 @@ export type ProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   radiusKm?: boolean
   contractTypes?: boolean
   workModes?: boolean
+  languages?: boolean
   salaryMin?: boolean
   salaryCurrency?: boolean
   salaryPeriod?: boolean
@@ -1046,6 +1089,7 @@ export type ProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   radiusKm?: boolean
   contractTypes?: boolean
   workModes?: boolean
+  languages?: boolean
   salaryMin?: boolean
   salaryCurrency?: boolean
   salaryPeriod?: boolean
@@ -1068,6 +1112,7 @@ export type ProfileSelectScalar = {
   radiusKm?: boolean
   contractTypes?: boolean
   workModes?: boolean
+  languages?: boolean
   salaryMin?: boolean
   salaryCurrency?: boolean
   salaryPeriod?: boolean
@@ -1078,7 +1123,7 @@ export type ProfileSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "headline" | "experienceLevel" | "yearsExperience" | "locationCity" | "locationCountry" | "radiusKm" | "contractTypes" | "workModes" | "salaryMin" | "salaryCurrency" | "salaryPeriod" | "bio" | "isPublished" | "lastSearchAt" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "headline" | "experienceLevel" | "yearsExperience" | "locationCity" | "locationCountry" | "radiusKm" | "contractTypes" | "workModes" | "languages" | "salaryMin" | "salaryCurrency" | "salaryPeriod" | "bio" | "isPublished" | "lastSearchAt" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
 export type ProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   skills?: boolean | Prisma.Profile$skillsArgs<ExtArgs>
@@ -1114,6 +1159,10 @@ export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     radiusKm: number
     contractTypes: $Enums.ContractType[]
     workModes: $Enums.WorkMode[]
+    /**
+     * Langues d'offres acceptées (vide = pas de filtre).
+     */
+    languages: $Enums.OfferLanguage[]
     salaryMin: number | null
     salaryCurrency: string
     salaryPeriod: string
@@ -1557,6 +1606,7 @@ export interface ProfileFieldRefs {
   readonly radiusKm: Prisma.FieldRef<"Profile", 'Int'>
   readonly contractTypes: Prisma.FieldRef<"Profile", 'ContractType[]'>
   readonly workModes: Prisma.FieldRef<"Profile", 'WorkMode[]'>
+  readonly languages: Prisma.FieldRef<"Profile", 'OfferLanguage[]'>
   readonly salaryMin: Prisma.FieldRef<"Profile", 'Int'>
   readonly salaryCurrency: Prisma.FieldRef<"Profile", 'String'>
   readonly salaryPeriod: Prisma.FieldRef<"Profile", 'String'>

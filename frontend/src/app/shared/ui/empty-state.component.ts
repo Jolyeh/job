@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { LucideAngularModule, SearchX } from 'lucide-angular';
+import { I18nService } from '../../core/i18n/i18n.service';
 
 /** État vide réutilisable (aucun résultat, aucun favori…). */
 @Component({
@@ -22,8 +23,10 @@ import { LucideAngularModule, SearchX } from 'lucide-angular';
   `,
 })
 export class EmptyStateComponent {
-  readonly title = input('Aucun résultat');
-  readonly description = input('Essayez de modifier vos critères de recherche.');
+  private readonly i18n = inject(I18nService);
+
+  readonly title = input(this.i18n.t('jobs.emptyTitle'));
+  readonly description = input(this.i18n.t('jobs.emptyText'));
   readonly actionLabel = input<string | null>(null);
   readonly icon = input(SearchX);
   readonly action = output<void>();

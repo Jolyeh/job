@@ -1,6 +1,7 @@
 import {
   ContractType,
   ExperienceLevel,
+  OfferLanguage,
   WorkMode,
 } from '../../generated/prisma/enums';
 
@@ -11,6 +12,8 @@ export interface ProviderQuery {
   country?: string;
   contractTypes?: ContractType[];
   workModes?: WorkMode[];
+  /** Langues acceptées : les providers non textuels peuvent l'ignorer. */
+  languages?: OfferLanguage[];
   /** Nombre max d'offres à récupérer chez le fournisseur. */
   limit: number;
   /** Fournisseur demandé explicitement (sinon tous les providers actifs). */
@@ -29,6 +32,8 @@ export interface NormalizedOffer {
   contractType: ContractType;
   workMode: WorkMode;
   experienceLevel: ExperienceLevel;
+  /** Langue de rédaction détectée (FR par défaut). */
+  language?: OfferLanguage;
   salaryMin?: number | null;
   salaryMax?: number | null;
   salaryCurrency?: string;

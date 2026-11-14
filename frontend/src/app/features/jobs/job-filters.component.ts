@@ -8,13 +8,14 @@ import {
   SlidersHorizontal,
   X,
 } from 'lucide-angular';
-import { ContractType, ExperienceLevel, WorkMode } from '../../core/models/api.models';
 import {
-  CONTRACT_LABELS,
-  EXPERIENCE_LABELS,
-  JobsStore,
-  WORK_MODE_LABELS,
-} from '../../core/services/jobs.store';
+  ContractType,
+  ExperienceLevel,
+  OfferLanguage,
+  WorkMode,
+} from '../../core/models/api.models';
+import { JobsStore } from '../../core/services/jobs.store';
+import { I18nService } from '../../core/i18n/i18n.service';
 
 interface Option<T extends string> {
   value: T;
@@ -35,7 +36,7 @@ interface Option<T extends string> {
       <header class="mb-4 flex items-center justify-between">
         <h2 class="flex items-center gap-2 text-sm font-bold text-ink-900">
           <lucide-angular [img]="FilterIcon" class="size-4 text-brand-600" />
-          Filtres
+          {{ i18n.t('filters.title') }}
           @if (store.activeFilterCount() > 0) {
             <span class="badge-brand">{{ store.activeFilterCount() }}</span>
           }
@@ -47,7 +48,7 @@ interface Option<T extends string> {
             (click)="store.resetFilters()"
           >
             <lucide-angular [img]="ResetIcon" class="size-3.5" />
-            Réinitialiser
+            {{ i18n.t('common.reset') }}
           </button>
         }
       </header>
@@ -55,7 +56,7 @@ interface Option<T extends string> {
       <div class="space-y-5">
         <!-- Mot-clé -->
         <div>
-          <label class="field-label" for="filter-q">Mot-clé</label>
+          <label class="field-label" for="filter-q">{{ i18n.t("filters.keyword") }}</label>
           <div class="relative">
             <lucide-angular
               [img]="SearchIcon"
@@ -65,7 +66,7 @@ interface Option<T extends string> {
               id="filter-q"
               type="search"
               class="input pl-9.5"
-              placeholder="Angular, data, design…"
+              [placeholder]="i18n.t('filters.keywordPlaceholder')"
               [value]="store.filters().q ?? ''"
               (input)="onKeyword($event)"
             />
@@ -74,12 +75,12 @@ interface Option<T extends string> {
 
         <!-- Ville -->
         <div>
-          <label class="field-label" for="filter-city">Ville</label>
+          <label class="field-label" for="filter-city">{{ i18n.t("filters.city") }}</label>
           <input
             id="filter-city"
             type="text"
             class="input"
-            placeholder="Paris, Lyon, télétravail…"
+            [placeholder]="i18n.t('filters.cityPlaceholder')"
             [value]="store.filters().city ?? ''"
             (input)="onCity($event)"
           />
@@ -87,7 +88,7 @@ interface Option<T extends string> {
 
         <!-- Type de contrat (puces custom) -->
         <fieldset>
-          <legend class="field-label">Type de contrat</legend>
+          <legend class="field-label">{{ i18n.t("filters.contract") }}</legend>
           <div class="flex flex-wrap gap-1.5">
             @for (option of contractOptions; track option.value) {
               <label class="chip">
@@ -96,7 +97,7 @@ interface Option<T extends string> {
                   [checked]="isContractSelected(option.value)"
                   (change)="store.toggleMulti('contractType', option.value)"
                 />
-                {{ option.label }}
+                {{ i18n.t(option.label) }}
                 @if (contractCount(option.value); as count) {
                   <span class="text-ink-400">{{ count }}</span>
                 }
@@ -107,7 +108,7 @@ interface Option<T extends string> {
 
         <!-- Mode de travail -->
         <fieldset>
-          <legend class="field-label">Mode de travail</legend>
+          <legend class="field-label">{{ i18n.t("filters.workMode") }}</legend>
           <div class="flex flex-wrap gap-1.5">
             @for (option of workModeOptions; track option.value) {
               <label class="chip">
@@ -116,7 +117,7 @@ interface Option<T extends string> {
                   [checked]="isWorkModeSelected(option.value)"
                   (change)="store.toggleMulti('workMode', option.value)"
                 />
-                {{ option.label }}
+                {{ i18n.t(option.label) }}
                 @if (workModeCount(option.value); as count) {
                   <span class="text-ink-400">{{ count }}</span>
                 }
@@ -125,18 +126,39 @@ interface Option<T extends string> {
           </div>
         </fieldset>
 
+        <!-- Langue de l'offre (filtre demandé explicitement) -->
+        <fieldset>
+          <legend class="field-label">{{ i18n.t('filters.language') }}</legend>
+          <div class="flex flex-wrap gap-1.5">
+            @for (option of languageOptions; track option.value) {
+              <label class="chip">
+                <input
+                  type="checkbox"
+                  [checked]="isLanguageSelected(option.value)"
+                  (change)="store.toggleMulti('languages', option.value)"
+                />
+                {{ i18n.t(option.label) }}
+                @if (languageCount(option.value); as count) {
+                  <span class="text-ink-400">{{ count }}</span>
+                }
+              </label>
+            }
+          </div>
+          <p class="field-hint">{{ i18n.t('filters.languageHint') }}</p>
+        </fieldset>
+
         <!-- Niveau d'expérience -->
         <div>
-          <label class="field-label" for="filter-experience">Niveau requis</label>
+          <label class="field-label" for="filter-experience">{{ i18n.t("filters.experience") }}</label>
           <select
             id="filter-experience"
             class="select"
             [value]="store.filters().experienceLevel ?? ''"
             (change)="onExperience($event)"
           >
-            <option value="">Tous les niveaux</option>
+            <option value="">{{ i18n.t("filters.allLevels") }}</option>
             @for (option of experienceOptions; track option.value) {
-              <option [value]="option.value">{{ option.label }}</option>
+              <option [value]="option.value">{{ i18n.t(option.label) }}</option>
             }
           </select>
         </div>
@@ -146,7 +168,7 @@ interface Option<T extends string> {
           <label class="field-label" for="filter-score">
             Score minimum
             <span class="ml-1 font-normal text-ink-500">
-              {{ store.filters().minScore ? '≥ ' + store.filters().minScore : 'tous' }}
+              {{ store.filters().minScore ? "≥ " + store.filters().minScore : i18n.t("filters.any") }}
             </span>
           </label>
           <input
@@ -160,14 +182,14 @@ interface Option<T extends string> {
             (input)="onMinScore($event)"
           />
           <div class="mt-1 flex justify-between text-[11px] text-ink-400">
-            <span>Toutes</span>
-            <span>Très pertinentes</span>
+            <span>{{ i18n.t("filters.any") }}</span>
+            <span>{{ i18n.t("filters.highMatch") }}</span>
           </div>
         </div>
 
         <!-- Fraîcheur -->
         <fieldset>
-          <legend class="field-label">Fraîcheur</legend>
+          <legend class="field-label">{{ i18n.t("filters.freshness") }}</legend>
           <div class="grid grid-cols-2 gap-1.5">
             @for (option of freshnessOptions; track option.value) {
               <label class="chip justify-center">
@@ -177,7 +199,7 @@ interface Option<T extends string> {
                   [checked]="store.filters().maxAgeDays === option.value"
                   (change)="store.patchFilters({ maxAgeDays: option.value })"
                 />
-                {{ option.label }}
+                {{ i18n.t(option.labelKey) }}
               </label>
             }
           </div>
@@ -185,7 +207,7 @@ interface Option<T extends string> {
 
         <!-- Rémunération minimum -->
         <div>
-          <label class="field-label" for="filter-salary">Salaire minimum annuel</label>
+          <label class="field-label" for="filter-salary">{{ i18n.t("filters.salary") }}</label>
           <div class="relative">
             <input
               id="filter-salary"
@@ -193,7 +215,7 @@ interface Option<T extends string> {
               min="0"
               step="5000"
               class="input pr-8 tabular-nums"
-              placeholder="Aucun minimum"
+              [placeholder]="i18n.t('filters.noMinimum')"
               [value]="store.filters().salaryMin ?? ''"
               (change)="onSalary($event)"
             />
@@ -203,7 +225,7 @@ interface Option<T extends string> {
 
         <!-- Tri -->
         <div>
-          <label class="field-label" for="filter-sort">Trier par</label>
+          <label class="field-label" for="filter-sort">{{ i18n.t("filters.sortBy") }}</label>
           <div class="relative">
             <select
               id="filter-sort"
@@ -211,9 +233,9 @@ interface Option<T extends string> {
               [value]="store.filters().sort ?? 'relevance'"
               (change)="onSort($event)"
             >
-              <option value="relevance">Pertinence (score)</option>
-              <option value="recent">Plus récentes</option>
-              <option value="salary">Salaire le plus élevé</option>
+              <option value="relevance">{{ i18n.t("filters.sort.relevance") }}</option>
+              <option value="recent">{{ i18n.t("filters.sort.recent") }}</option>
+              <option value="salary">{{ i18n.t("filters.sort.salary") }}</option>
             </select>
           </div>
         </div>
@@ -223,6 +245,7 @@ interface Option<T extends string> {
 })
 export class JobFiltersComponent {
   readonly store = inject(JobsStore);
+  readonly i18n = inject(I18nService);
 
   /** Version mobile : le panneau est affiché en tiroir. */
   readonly compact = input(false);
@@ -235,23 +258,29 @@ export class JobFiltersComponent {
   readonly ChevronIcon = ChevronDown;
   readonly XIcon = X;
 
+  /** Enums complets : la valeur est l'enum, le libellé une clé i18n. */
   readonly contractOptions: Option<ContractType>[] = (
-    Object.keys(CONTRACT_LABELS) as ContractType[]
-  ).map((value) => ({ value, label: CONTRACT_LABELS[value] }));
+    ['CDI', 'CDD', 'STAGE', 'ALTERNANCE', 'FREELANCE', 'INTERIM'] as ContractType[]
+  ).map((value) => ({ value, label: `contract.${value}` }));
 
   readonly workModeOptions: Option<WorkMode>[] = (
-    Object.keys(WORK_MODE_LABELS) as WorkMode[]
-  ).map((value) => ({ value, label: WORK_MODE_LABELS[value] }));
+    ['ONSITE', 'HYBRID', 'REMOTE'] as WorkMode[]
+  ).map((value) => ({ value, label: `workMode.${value}` }));
 
   readonly experienceOptions: Option<ExperienceLevel>[] = (
-    Object.keys(EXPERIENCE_LABELS) as ExperienceLevel[]
-  ).map((value) => ({ value, label: EXPERIENCE_LABELS[value] }));
+    ['JUNIOR', 'INTERMEDIATE', 'SENIOR', 'LEAD'] as ExperienceLevel[]
+  ).map((value) => ({ value, label: `experience.${value}` }));
 
-  readonly freshnessOptions: Array<{ value: number | undefined; label: string }> = [
-    { value: 7, label: '7 derniers jours' },
-    { value: 30, label: '30 jours' },
-    { value: 90, label: '3 mois' },
-    { value: undefined, label: 'Tout' },
+  /** Le filtre de langue est obligatoire dans l'interface. */
+  readonly languageOptions: Option<OfferLanguage>[] = (
+    ['FR', 'EN'] as OfferLanguage[]
+  ).map((value) => ({ value, label: `language.${value}` }));
+
+  readonly freshnessOptions: Array<{ value: number | undefined; labelKey: string }> = [
+    { value: 7, labelKey: 'filters.days7' },
+    { value: 30, labelKey: 'filters.days30' },
+    { value: 90, labelKey: 'filters.days90' },
+    { value: undefined, labelKey: 'filters.any' },
   ];
 
   private readonly keywordTimer = signal<ReturnType<typeof setTimeout> | null>(null);
@@ -264,6 +293,14 @@ export class JobFiltersComponent {
 
   isWorkModeSelected(value: WorkMode): boolean {
     return (this.store.filters().workMode ?? []).includes(value);
+  }
+
+  isLanguageSelected(value: OfferLanguage): boolean {
+    return (this.store.filters().languages ?? []).includes(value);
+  }
+
+  languageCount(value: OfferLanguage): number {
+    return this.facets()?.languages?.find((facet) => facet.value === value)?.count ?? 0;
   }
 
   contractCount(value: ContractType): number {

@@ -3,6 +3,7 @@ import { Observable, catchError, finalize, map, of, tap } from 'rxjs';
 import { Profile, ProfilePayload } from '../models/api.models';
 import { ApiError, ApiService } from './api.service';
 import { UiStore } from './ui.store';
+import { I18nService } from '../i18n/i18n.service';
 
 /**
  * Store du profil de recherche (Signals).
@@ -14,6 +15,7 @@ import { UiStore } from './ui.store';
 export class ProfileStore {
   private readonly api = inject(ApiService);
   private readonly ui = inject(UiStore);
+  private readonly i18n = inject(I18nService);
 
   private readonly profileState = signal<Profile | null>(null);
   private readonly loadingState = signal(false);
@@ -30,10 +32,12 @@ export class ProfileStore {
   readonly completeness = computed(() => this.profileState()?.completeness ?? 0);
   readonly skillCount = computed(() => this.profileState()?.skills.length ?? 0);
   readonly topSkills = computed(() => (this.profileState()?.skills ?? []).slice(0, 6));
+  /** Langues d'offres acceptées par le profil (sert de valeur par défaut au filtre). */
+  readonly languages = computed(() => this.profileState()?.languages ?? []);
   readonly headline = computed(() => this.profileState()?.headline ?? null);
   readonly lastSearchLabel = computed(() => {
     const value = this.profileState()?.lastSearchAt;
-    return value ? formatRelative(value) : 'jamais';
+    return value ? formatRelative(value) : this.i18n.t('profile.never');
   });
 
   /** Chargement paresseux : une seule requête par session. */
@@ -71,7 +75,7 @@ export class ProfileStore {
       tap((profile) => {
         this.profileState.set(profile);
         this.loadedState.set(true);
-        this.ui.notify('Profil enregistré — vos recommandations sont à jour.', 'success');
+        this.ui.notify(this.i18n.t('toast.profileSaved'), 'success');
       }),
       catchError((error: unknown) => {
         const apiError = error as ApiError;

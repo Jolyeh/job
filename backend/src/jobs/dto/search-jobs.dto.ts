@@ -14,6 +14,7 @@ import {
 import {
   ContractType,
   ExperienceLevel,
+  OfferLanguage,
   WorkMode,
 } from '../../generated/prisma/enums';
 
@@ -57,6 +58,13 @@ export class SearchJobsDto {
   @IsArray()
   @IsEnum(WorkMode, { each: true })
   workMode?: WorkMode[];
+
+  /** Langues d'offres acceptées : évite les annonces illisibles. */
+  @IsOptional()
+  @Transform(toArray)
+  @IsArray()
+  @IsEnum(OfferLanguage, { each: true })
+  languages?: OfferLanguage[];
 
   @IsOptional()
   @IsEnum(ExperienceLevel)

@@ -181,3 +181,47 @@ export function extractSkills(
 
   return [...found.values()];
 }
+
+/**
+ * Détecte la langue de rédaction d'une offre (FR / EN).
+ *
+ * Heuristique volontairement simple et déterministe : on compte les mots
+ * outils les plus discriminants de chaque langue, plus quelques indices
+ * typographiques. Elle sert à filtrer les offres illisibles pour
+ * l'utilisateur, pas à faire de la traduction : un score ex æquo retombe sur
+ * le français (sources majoritairement francophones par défaut).
+ */
+export function detectLanguage(text: string): 'FR' | 'EN' {
+  const sample = text.slice(0, 4000).toLowerCase();
+  if (!sample.trim()) return 'FR';
+
+  const tokens = sample.replace(/[^a-zà-ÿ' ]/g, ' ').split(/\s+/).filter(Boolean);
+  if (tokens.length < 12) {
+    // Texte trop court : on regarde seulement les accents.
+    return /[àâçéèêëîïôûùüÿœ]/.test(sample) ? 'FR' : 'EN';
+  }
+
+  const FR = new Set([
+    'le','la','les','des','une','est','et','pour','avec','vous','nous','dans','sur','au','aux','du',
+    'de','en','qui','que','votre','notre','poste','recherche','profil','équipe','entreprise','chez',
+    'missions','compétences','candidature','salaire','contrat','expérience','ans','être','avez','vos',
+  ]);
+  const EN = new Set([
+    'the','and','with','for','you','we','our','your','in','on','of','to','a','is','are','be','as',
+    'from','will','role','team','company','about','experience','skills','requirements','apply',
+    'benefits','salary','job','work','years','have','this','that','at','by','or','not',
+  ]);
+
+  let fr = 0;
+  let en = 0;
+  for (const token of tokens) {
+    if (FR.has(token)) fr++;
+    if (EN.has(token)) en++;
+  }
+
+  // Accents : indice fort de français, absent de l'anglais courant.
+  const accents = (sample.match(/[àâçéèêëîïôûùüÿœ]/g) ?? []).length;
+  fr += Math.min(8, Math.round((accents / tokens.length) * 60));
+
+  return en > fr ? 'EN' : 'FR';
+}

@@ -5,7 +5,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import {
   LucideAngularModule,
@@ -28,9 +27,9 @@ import {
 } from '../../core/models/api.models';
 import {
   BookmarksStore,
-  STATUS_LABELS,
   STATUS_ORDER,
 } from '../../core/services/bookmarks.store';
+import { I18nService } from '../../core/i18n/i18n.service';
 import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
 
 /**
@@ -40,35 +39,35 @@ import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
 @Component({
   selector: 'app-bookmarks-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [EmptyStateComponent, LucideAngularModule, RouterLink, DatePipe],
+  imports: [EmptyStateComponent, LucideAngularModule, RouterLink],
   template: `
     <div class="mx-auto max-w-7xl">
       <header class="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
           <p class="badge-brand">
             <lucide-angular [img]="BookmarkIcon" class="size-3.5" />
-            Suivi de candidatures
+            {{ i18n.t('bookmarks.title') }}
           </p>
           <h1 class="mt-3 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-            {{ store.total() }} candidature{{ store.total() > 1 ? 's' : '' }} suivie{{ store.total() > 1 ? 's' : '' }}
+            {{ i18n.t('bookmarks.count', { count: store.total() }) }}
           </h1>
           <p class="mt-1.5 text-sm text-ink-500">
-            Faites avancer chaque offre d'étape en étape : sauvegarde, envoi, entretien, proposition.
+            {{ i18n.t('bookmarks.subtitle') }}
           </p>
         </div>
 
         @if (store.stats(); as stats) {
           <dl class="flex gap-3">
             <div class="card px-4 py-3">
-              <dt class="text-[11px] font-semibold uppercase tracking-wide text-ink-500">Envoyées</dt>
+              <dt class="text-[11px] font-semibold uppercase tracking-wide text-ink-500">{{ i18n.t('bookmarks.kpi.applied') }}</dt>
               <dd class="font-display text-xl font-extrabold tabular-nums">{{ stats.applied }}</dd>
             </div>
             <div class="card px-4 py-3">
-              <dt class="text-[11px] font-semibold uppercase tracking-wide text-ink-500">Réponses</dt>
+              <dt class="text-[11px] font-semibold uppercase tracking-wide text-ink-500">{{ i18n.t('bookmarks.kpi.responses') }}</dt>
               <dd class="font-display text-xl font-extrabold tabular-nums">{{ stats.responseRate }}%</dd>
             </div>
             <div class="card px-4 py-3">
-              <dt class="text-[11px] font-semibold uppercase tracking-wide text-ink-500">À relancer</dt>
+              <dt class="text-[11px] font-semibold uppercase tracking-wide text-ink-500">{{ i18n.t('bookmarks.kpi.followUp') }}</dt>
               <dd class="font-display text-xl font-extrabold tabular-nums">{{ stats.upcomingActions }}</dd>
             </div>
           </dl>
@@ -98,9 +97,9 @@ import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
       } @else if (store.total() === 0) {
         <div class="card">
           <app-empty-state
-            title="Aucune candidature suivie"
-            description="Sauvegardez une offre depuis le catalogue : elle apparaîtra ici pour suivre chaque étape."
-            actionLabel="Parcourir les offres"
+            [title]="i18n.t('bookmarks.emptyTitle')"
+            [description]="i18n.t('bookmarks.emptyText')"
+            [actionLabel]="i18n.t('bookmarks.emptyAction')"
             [icon]="BookmarkIcon"
             (action)="goToJobs()"
           />
@@ -114,7 +113,7 @@ import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
                 <header class="mb-2.5 flex items-center justify-between px-1.5">
                   <h2 class="flex items-center gap-2 text-sm font-bold text-ink-800">
                     <span class="size-2 rounded-full" [class]="statusDot(status)"></span>
-                    {{ labels[status] }}
+                    {{ statusLabel(status) }}
                   </h2>
                   <span class="badge-neutral tabular-nums">{{ columnFor(status).length }}</span>
                 </header>
@@ -146,7 +145,7 @@ import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
                       @if (bookmark.nextActionAt) {
                         <p class="mt-2 flex items-center gap-1 rounded-lg bg-warn-50 px-2 py-1 text-[11px] font-semibold text-warn-700">
                           <lucide-angular [img]="CalendarIcon" class="size-3" />
-                          Prochaine action : {{ bookmark.nextActionAt | date: 'd MMM' }}
+                          {{ i18n.t('bookmarks.nextAction') }} {{ i18n.formatDate(bookmark.nextActionAt, { year: undefined, day: 'numeric', month: 'short' }) }}
                         </p>
                       }
 
@@ -163,13 +162,13 @@ import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
                             (click)="advance(bookmark, next)"
                           >
                             <lucide-angular [img]="NextIcon" class="size-3.5" />
-                            {{ labels[next] }}
+                            {{ statusLabel(next) }}
                           </button>
                         }
                         <button
                           type="button"
                           class="btn-icon size-7"
-                          [attr.aria-label]="'Modifier ' + bookmark.offer.title"
+                          [attr.aria-label]="i18n.t('bookmarks.edit') + ' ' + bookmark.offer.title"
                           (click)="openEditor(bookmark)"
                         >
                           <lucide-angular [img]="EditIcon" class="size-3.5" />
@@ -177,7 +176,7 @@ import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
                         <button
                           type="button"
                           class="btn-icon size-7 hover:bg-danger-50 hover:text-danger-700"
-                          [attr.aria-label]="'Retirer ' + bookmark.offer.title"
+                          [attr.aria-label]="i18n.t('bookmarks.remove') + ' ' + bookmark.offer.title"
                           (click)="store.remove(bookmark.id)"
                         >
                           <lucide-angular [img]="TrashIcon" class="size-3.5" />
@@ -208,26 +207,26 @@ import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
           >
             <div class="mb-4 flex items-start justify-between gap-3">
               <div>
-                <h2 id="editor-title" class="text-base font-bold">Mettre à jour le suivi</h2>
+                <h2 id="editor-title" class="text-base font-bold">{{ i18n.t('bookmarks.editor.title') }}</h2>
                 <p class="text-xs text-ink-500">{{ bookmark.offer.title }}</p>
               </div>
-              <button type="button" class="btn-icon" aria-label="Fermer" (click)="closeEditor()">
+              <button type="button" class="btn-icon" [attr.aria-label]="i18n.t('common.close')" (click)="closeEditor()">
                 <lucide-angular [img]="CloseIcon" class="size-5" />
               </button>
             </div>
 
             <form class="space-y-4" (submit)="saveEditor($event)">
               <div>
-                <label class="field-label" for="editor-status">Étape</label>
+                <label class="field-label" for="editor-status">{{ i18n.t('bookmarks.editor.status') }}</label>
                 <select id="editor-status" class="select" [value]="editStatus()" (change)="onStatusChange($event)">
                   @for (status of visibleStatuses; track status) {
-                    <option [value]="status">{{ labels[status] }}</option>
+                    <option [value]="status">{{ statusLabel(status) }}</option>
                   }
                 </select>
               </div>
 
               <div>
-                <label class="field-label" for="editor-next">Prochaine action</label>
+                <label class="field-label" for="editor-next">{{ i18n.t('bookmarks.editor.next') }}</label>
                 <input
                   id="editor-next"
                   type="date"
@@ -238,22 +237,22 @@ import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
               </div>
 
               <div>
-                <label class="field-label" for="editor-notes">Notes</label>
+                <label class="field-label" for="editor-notes">{{ i18n.t('bookmarks.editor.notes') }}</label>
                 <textarea
                   id="editor-notes"
                   rows="3"
                   class="textarea resize-y"
-                  placeholder="Contact RH, préparation d'entretien, retour reçu…"
+                  [placeholder]="i18n.t('bookmarks.editor.notesPlaceholder')"
                   [value]="editNotes()"
                   (input)="onNotesChange($event)"
                 ></textarea>
               </div>
 
               <div class="flex justify-end gap-2 border-t border-ink-100 pt-4">
-                <button type="button" class="btn-secondary" (click)="closeEditor()">Annuler</button>
+                <button type="button" class="btn-secondary" (click)="closeEditor()">{{ i18n.t('common.cancel') }}</button>
                 <button type="submit" class="btn-primary">
                   <lucide-angular [img]="SendIcon" class="size-4" />
-                  Enregistrer
+                  {{ i18n.t('common.save') }}
                 </button>
               </div>
             </form>
@@ -263,14 +262,14 @@ import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
               <div class="mt-4 border-t border-ink-100 pt-3">
                 <p class="mb-2 flex items-center gap-1.5 text-xs font-semibold text-ink-600">
                   <lucide-angular [img]="HistoryIcon" class="size-3.5" />
-                  Historique
+                  {{ i18n.t('bookmarks.editor.history') }}
                 </p>
                 <ol class="space-y-1.5">
                   @for (event of bookmark.events; track event.id) {
                     <li class="flex items-center gap-2 text-[11px] text-ink-500">
                       <span class="size-1.5 rounded-full bg-brand-400"></span>
-                      <span class="font-medium text-ink-700">{{ labels[event.status] }}</span>
-                      <span>· {{ event.createdAt | date: 'd MMM y à HH:mm' }}</span>
+                      <span class="font-medium text-ink-700">{{ statusLabel(event.status) }}</span>
+                      <span>· {{ i18n.formatDate(event.createdAt, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) }}</span>
                       @if (event.comment) {
                         <span class="truncate italic">— {{ event.comment }}</span>
                       }
@@ -287,8 +286,11 @@ import { EmptyStateComponent } from '../../shared/ui/empty-state.component';
 })
 export class BookmarksPageComponent implements OnInit {
   readonly store = inject(BookmarksStore);
-
-  readonly labels = STATUS_LABELS;
+  readonly i18n = inject(I18nService);
+  /** Libellé traduit d'un statut de candidature. */
+  statusLabel(status: ApplicationStatus): string {
+    return this.i18n.t(`status.${status}`);
+  }
   readonly visibleStatuses = STATUS_ORDER;
 
   readonly BookmarkIcon = Bookmark;

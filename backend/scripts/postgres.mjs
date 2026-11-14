@@ -30,11 +30,35 @@ import net from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+/**
+ * Identifiants du cluster local. Ils sont *dérivés de `DATABASE_URL`* quand
+ * elle est fournie, pour éviter la classique désynchronisation entre le script
+ * et l'application. Valeurs par défaut neutres : `dev` / `Prince@14`
+ * (aucun secret réel dans le dépôt).
+ */
+function fromDatabaseUrl() {
+  const raw = process.env.DATABASE_URL;
+  if (!raw) return {};
+  try {
+    const url = new URL(raw);
+    return {
+      user: decodeURIComponent(url.username || ''),
+      password: decodeURIComponent(url.password || ''),
+      database: url.pathname.replace(/^\//, '') || '',
+      port: url.port || '',
+    };
+  } catch {
+    return {};
+  }
+}
+
+const fromUrl = fromDatabaseUrl();
+
 const {
-  PGPORT = '55432',
-  PGDATABASE = 'jobradar',
-  PGUSER = 'jobradar',
-  PGPASSWORD = 'jobradar',
+  PGPORT = fromUrl.port || '55432',
+  PGDATABASE = fromUrl.database || 'jobradar',
+  PGUSER = fromUrl.user || 'dev',
+  PGPASSWORD = fromUrl.password || 'Prince@14',
 } = process.env;
 
 const port = Number(PGPORT);

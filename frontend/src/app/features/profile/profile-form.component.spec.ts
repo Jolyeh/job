@@ -16,6 +16,7 @@ const profile: Profile = {
   radiusKm: 40,
   contractTypes: ['CDI', 'FREELANCE'],
   workModes: ['HYBRID', 'REMOTE'],
+  languages: ['FR'],
   salaryMin: 50000,
   salaryCurrency: 'EUR',
   salaryPeriod: 'YEAR',

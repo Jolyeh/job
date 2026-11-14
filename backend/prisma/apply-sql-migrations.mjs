@@ -21,7 +21,7 @@ import path from 'node:path';
 import 'dotenv/config';
 import { Client } from 'pg';
 
-const DEFAULT_URL = 'postgresql://jobradar:jobradar@localhost:55432/jobradar';
+const DEFAULT_URL = 'postgresql://dev:Prince%4014@localhost:55432/jobradar';
 const connectionString = process.env.DATABASE_URL ?? DEFAULT_URL;
 
 /** Masque le mot de passe avant affichage dans les journaux. */

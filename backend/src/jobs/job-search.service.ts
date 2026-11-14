@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserProfileService } from '../user-profile/user-profile.service';
+import { OfferLanguage } from '../generated/prisma/enums';
 import { SearchJobsDto } from './dto/search-jobs.dto';
 import { JobAggregatorService } from './job-aggregator.service';
 import {
@@ -21,6 +22,8 @@ export interface RankedJobOffer {
   contractType: string;
   workMode: string;
   experienceLevel: string;
+  /** Langue de rédaction de l'offre (FR / EN). */
+  language: string;
   salaryMin: number | null;
   salaryMax: number | null;
   salaryCurrency: string;
@@ -44,6 +47,7 @@ export interface JobSearchResponse {
   facets: {
     contractTypes: Array<{ value: string; count: number }>;
     workModes: Array<{ value: string; count: number }>;
+    languages: Array<{ value: string; count: number }>;
     sources: Array<{ value: string; count: number }>;
     averageScore: number;
     topScore: number;
@@ -88,6 +92,7 @@ export class JobSearchService {
       country: profile?.locationCountry ?? 'FR',
       contractTypes: filters.contractType ?? (profile?.contractTypes as never),
       workModes: filters.workMode ?? (profile?.workModes as never),
+      languages: filters.languages,
       limit: Math.max(filters.pageSize * 4, 40),
       onlyProvider: filters.source,
     };
@@ -122,6 +127,10 @@ export class JobSearchService {
         ? new Date(Date.now() - filters.maxAgeDays * 86_400_000)
         : undefined;
 
+    // Langues acceptées : le filtre de l'interface prime sur le profil.
+    const effectiveLanguages =
+      filters.languages?.length ? filters.languages : (profile?.languages ?? []);
+
     const offers = await this.prisma.jobOffer.findMany({
       where: {
         isActive: true,
@@ -134,6 +143,10 @@ export class JobSearchService {
           ? { contractType: { in: filters.contractType } }
           : {}),
         ...(filters.workMode?.length ? { workMode: { in: filters.workMode } } : {}),
+        // Langue : le filtre explicite prime, sinon les préférences du profil.
+        ...(effectiveLanguages.length
+          ? { language: { in: effectiveLanguages as OfferLanguage[] } }
+          : {}),
         ...(filters.experienceLevel ? { experienceLevel: filters.experienceLevel } : {}),
         ...(filters.salaryMin ? { salaryMax: { gte: filters.salaryMin } } : {}),
         ...(filters.q
@@ -185,6 +198,7 @@ export class JobSearchService {
       radiusKm: 0,
       contractTypes: [],
       workModes: [],
+      languages: [],
       salaryMin: 0,
       salaryCurrency: 'EUR',
       skills: [],
@@ -220,6 +234,7 @@ export class JobSearchService {
     const facets = {
       contractTypes: countBy(ranked.map((entry) => entry.offer.contractType)),
       workModes: countBy(ranked.map((entry) => entry.offer.workMode)),
+      languages: countBy(ranked.map((entry) => entry.offer.raw.language)),
       sources: countBy(ranked.map((entry) => entry.offer.raw.source)),
       averageScore: ranked.length
         ? Math.round(ranked.reduce((sum, entry) => sum + entry.match.score, 0) / ranked.length)
@@ -247,6 +262,7 @@ export class JobSearchService {
           contractType: raw.contractType,
           workMode: raw.workMode,
           experienceLevel: raw.experienceLevel,
+          language: raw.language,
           salaryMin: raw.salaryMin,
           salaryMax: raw.salaryMax,
           salaryCurrency: raw.salaryCurrency,
@@ -307,6 +323,7 @@ export class JobSearchService {
       contractType: offer.contractType,
       workMode: offer.workMode,
       experienceLevel: offer.experienceLevel,
+      language: offer.language,
       salaryMin: offer.salaryMin,
       salaryMax: offer.salaryMax,
       salaryCurrency: offer.salaryCurrency,
@@ -333,6 +350,7 @@ export class JobSearchService {
       contractType: offer.contractType,
       workMode: offer.workMode,
       experienceLevel: offer.experienceLevel,
+      language: offer.language,
       salaryMin: offer.salaryMin,
       salaryMax: offer.salaryMax,
       salaryCurrency: offer.salaryCurrency,

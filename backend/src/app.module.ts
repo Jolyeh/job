@@ -11,6 +11,7 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { validateEnv } from './config/env.validation';
 import { HealthModule } from './health/health.module';
 import { JobsModule } from './jobs/jobs.module';
+import { JobSitesModule } from './job-sites/job-sites.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserProfileModule } from './user-profile/user-profile.module';
 
@@ -26,6 +27,7 @@ import { UserProfileModule } from './user-profile/user-profile.module';
     AuthModule,
     UserProfileModule,
     JobsModule,
+    JobSitesModule,
     BookmarksModule,
     HealthModule,
   ],

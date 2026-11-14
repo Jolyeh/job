@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
 import { LucideAngularModule, Sparkles, WandSparkles } from 'lucide-angular';
 import { ProfileStore } from '../../core/services/profile.store';
+import { I18nService } from '../../core/i18n/i18n.service';
 import { ProfileFormComponent } from './profile-form.component';
 
 /** Page « Mon profil » : charge le profil puis délègue au formulaire. */
@@ -13,14 +14,13 @@ import { ProfileFormComponent } from './profile-form.component';
       <header class="mb-6">
         <p class="badge-brand">
           <lucide-angular [img]="SparklesIcon" class="size-3.5" />
-          Profil de recherche
+          {{ i18n.t('profile.title') }}
         </p>
         <h1 class="mt-3 font-display text-2xl font-extrabold tracking-tight sm:text-3xl">
-          Votre profil pilote les recommandations
+          {{ i18n.t('profile.heading') }}
         </h1>
         <p class="mt-1.5 max-w-2xl text-sm text-ink-500">
-          Plus votre profil est précis, plus le score de correspondance est fiable. Vous pouvez
-          le modifier à tout moment : les offres sont reclassées immédiatement.
+          {{ i18n.t('profile.subtitle') }}
         </p>
       </header>
 
@@ -47,10 +47,9 @@ import { ProfileFormComponent } from './profile-form.component';
           <div class="mb-5 flex items-start gap-3 rounded-xl border border-brand-200 bg-brand-50 p-4">
             <lucide-angular [img]="WandSparklesIcon" class="mt-0.5 size-5 shrink-0 text-brand-600" />
             <div>
-              <p class="text-sm font-semibold text-brand-900">Créons votre profil de recherche</p>
+              <p class="text-sm font-semibold text-brand-900">{{ i18n.t('profile.onboarding.title') }}</p>
               <p class="text-sm text-brand-800/80">
-                Renseignez votre poste, vos compétences et vos critères : nous classerons les
-                offres par pertinence dès l'enregistrement.
+                {{ i18n.t('profile.onboarding.text') }}
               </p>
             </div>
           </div>
@@ -62,6 +61,7 @@ import { ProfileFormComponent } from './profile-form.component';
 })
 export class ProfilePageComponent implements OnInit {
   readonly store = inject(ProfileStore);
+  readonly i18n = inject(I18nService);
 
   readonly SparklesIcon = Sparkles;
   readonly WandSparklesIcon = WandSparkles;

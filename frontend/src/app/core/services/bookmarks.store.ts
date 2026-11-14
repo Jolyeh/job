@@ -7,6 +7,7 @@ import {
 } from '../models/api.models';
 import { ApiError, ApiService } from './api.service';
 import { UiStore } from './ui.store';
+import { I18nService } from '../i18n/i18n.service';
 
 export const STATUS_LABELS: Record<ApplicationStatus, string> = {
   SAVED: 'Sauvegardée',
@@ -35,6 +36,7 @@ export const STATUS_ORDER: ApplicationStatus[] = [
 export class BookmarksStore {
   private readonly api = inject(ApiService);
   private readonly ui = inject(UiStore);
+  private readonly i18n = inject(I18nService);
 
   private readonly itemsState = signal<Bookmark[]>([]);
   private readonly statsState = signal<BookmarkStats | null>(null);
@@ -107,7 +109,7 @@ export class BookmarksStore {
     return this.api.post<Bookmark>('/bookmarks', { jobOfferId: offerId }).pipe(
       tap((bookmark) => {
         this.itemsState.update((items) => [bookmark, ...items]);
-        this.ui.notify('Offre ajoutée à votre suivi.', 'success');
+        this.ui.notify(this.i18n.t('toast.bookmarkAdded'), 'success');
         this.refreshStats();
       }),
       catchError((error: unknown) => {
@@ -126,7 +128,7 @@ export class BookmarksStore {
       .delete<{ deleted: true }>(`/bookmarks/${bookmarkId}`)
       .pipe(
         tap(() => {
-          this.ui.notify('Offre retirée de votre suivi.', 'info');
+          this.ui.notify(this.i18n.t('toast.bookmarkRemoved'), 'info');
           this.refreshStats();
         }),
         catchError((error: unknown) => {

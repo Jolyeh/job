@@ -19,6 +19,7 @@ import {
 import {
   ContractType,
   ExperienceLevel,
+  OfferLanguage,
   WorkMode,
 } from '../../generated/prisma/enums';
 
@@ -76,6 +77,13 @@ export class UpsertProfileDto {
   @Min(0)
   @Max(500)
   radiusKm = 30;
+
+  /** Langues d'offres acceptées (vide = toutes). */
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(2)
+  @IsEnum(OfferLanguage, { each: true })
+  languages?: OfferLanguage[];
 
   @IsArray()
   @ArrayMinSize(1, { message: 'Sélectionnez au moins un type de contrat' })
